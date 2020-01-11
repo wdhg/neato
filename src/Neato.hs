@@ -17,5 +17,8 @@ type GeneWrapper
 type Genome
   = [GeneWrapper]
 
-data Generation
-  = Generation [Genome] GeneHistory
+type Generation
+  = ([Genome], GeneHistory)
+
+type Simulation
+  = [Generation]

@@ -11,8 +11,11 @@ type Gene
 type GeneHistory
   = [Gene]
 
+type GeneWrapper
+  = (Gene, Float, Bool)
+
 type Genome
-  = [(Gene, Float, Bool)]
+  = [GeneWrapper]
 
 type Generation
   = [Genome]

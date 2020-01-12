@@ -30,7 +30,7 @@ countDisjointTest
     , ((bit 0, bit 1 .|. bit 2), 1)
     , ((bit 4, bit 4), 0)
     , ((bit 5 .|. bit 9, bit 4 .|. bit 3), 2)
-    , ((bit 2 .|. bit 5, bit 1 .|. bit 4), 2)
+    , ((bit 2 .|. bit 5, bit 1 .|. bit 4), 3)
     ]
 
 tests :: Test

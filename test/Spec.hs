@@ -1,8 +1,12 @@
-import qualified NeatoTest
 import           Test.HUnit
+import qualified TestNeato
 
-
+tests :: Test
 tests
   = TestList
-  [ NeatoTest.tests
+  [ TestNeato.tests
   ]
+
+main :: IO Counts
+main
+  = runTestTT tests

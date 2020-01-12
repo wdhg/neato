@@ -4,6 +4,14 @@ import AI.Neato
 import Data.Bits
 import Test.HUnit
 
+getWeightTests :: Test
+getWeightTests
+  = TestList $ map (\((g, v), e) -> getWeight g v ~?= e)
+    [ ((Genome 7 [0.3, 0.5, 0.1] [], 2), 0.1)
+    , ((Genome 7 [0.3, 0.5, 0.1] [], 1), 0.5)
+    , ((Genome 7 [0.3, 0.5, 0.1] [], 0), 0.3)
+    ]
+
 getYoungestGeneTests :: Test
 getYoungestGeneTests
   = TestList $ map (\(v, e) -> getYoungestGene v ~?= e)
@@ -39,4 +47,5 @@ tests
     [ getYoungestGeneTests
     , countExcessTests
     , countDisjointTests
+    , getWeightTests
     ]

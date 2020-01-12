@@ -19,6 +19,12 @@ data Genome
   = Genome GeneVector [Double] [Bool]
     deriving (Eq, Show)
 
+getWeight :: Genome -> Int -> Double
+getWeight (Genome genes weights _) gene
+  = weights !! index
+    where
+      index = popCount $ genes .&. (bit gene - 1)
+
 getYoungestGene :: GeneVector -> Int
 getYoungestGene genes
   = (head $ dropWhile ((<= genes) . (2 ^)) [0..]) - 1

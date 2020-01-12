@@ -23,6 +23,16 @@ countExcessTest
     , ((bit 2 .|. bit 5, bit 1 .|. bit 4), 1)
     ]
 
+countDisjointTest :: Test
+countDisjointTest
+  = TestList $ map (\((g1, g2), e) -> (countDisjoint (Genome g1 [] []) (Genome g2 [] [])) ~?= e)
+    [ ((bit 0, bit 1), 2)
+    , ((bit 0, bit 1 .|. bit 2), 3)
+    , ((bit 4, bit 4), 0)
+    , ((bit 5 .|. bit 9, bit 4 .|. bit 3), 4)
+    , ((bit 2 .|. bit 5, bit 1 .|. bit 4), 4)
+    ]
+
 tests :: Test
 tests
   = TestList

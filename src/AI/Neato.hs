@@ -34,4 +34,4 @@ countDisjoint (Genome genes1 _ _) (Genome genes2 _ _)
   = popCount $ (genes1 .&. mask) `xor` (genes2 .&. mask)
     where
       end  = succ $ min (getYoungestGene genes1) (getYoungestGene genes2)
-      mask = pred $ fromIntegral $ popCount $ succ end
+      mask = bit end - 1

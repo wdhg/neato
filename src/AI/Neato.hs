@@ -17,6 +17,6 @@ data Genome
   = Genome GeneVector [Double] [Bool]
     deriving (Eq, Show)
 
-getYoungestGene :: Genome -> GeneVector
+getYoungestGene :: Genome -> Int
 getYoungestGene (Genome genes _ _)
   = (head $ dropWhile ((<= genes) . (2 ^)) [0..]) - 1

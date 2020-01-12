@@ -1,5 +1,7 @@
 module AI.Neato where
 
+import Data.Bits
+
 type Neuron
   = Int
 
@@ -17,6 +19,12 @@ data Genome
   = Genome GeneVector [Double] [Bool]
     deriving (Eq, Show)
 
-getYoungestGene :: Genome -> Int
-getYoungestGene (Genome genes _ _)
+getYoungestGene :: GeneVector -> Int
+getYoungestGene genes
   = (head $ dropWhile ((<= genes) . (2 ^)) [0..]) - 1
+
+countExcess :: Genome -> Genome -> Int
+countExcess (Genome genes1 _ _) (Genome genes2 _ _)
+  = popCount $ (shiftR genes1 end) `xor` (shiftR genes2 end)
+    where
+      end = succ $ min (getYoungestGene genes1) (getYoungestGene genes2)

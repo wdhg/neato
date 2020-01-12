@@ -13,8 +13,8 @@ getYoungestGeneTests
     , (bit 6 - 1, 5)
     ]
 
-countExcessTest :: Test
-countExcessTest
+countExcessTests :: Test
+countExcessTests
   = TestList $ map (\((g1, g2), e) -> (countExcess (Genome g1 [] []) (Genome g2 [] [])) ~?= e)
     [ ((bit 0, bit 1), 1)
     , ((bit 0, bit 1 .|. bit 2), 2)
@@ -23,8 +23,8 @@ countExcessTest
     , ((bit 2 .|. bit 5, bit 1 .|. bit 4), 1)
     ]
 
-countDisjointTest :: Test
-countDisjointTest
+countDisjointTests :: Test
+countDisjointTests
   = TestList $ map (\((g1, g2), e) -> (countDisjoint (Genome g1 [] []) (Genome g2 [] [])) ~?= e)
     [ ((bit 0, bit 1), 1)
     , ((bit 0, bit 1 .|. bit 2), 1)
@@ -37,6 +37,6 @@ tests :: Test
 tests
   = TestList
     [ getYoungestGeneTests
-    , countExcessTest
-    , countDisjointTest
+    , countExcessTests
+    , countDisjointTests
     ]

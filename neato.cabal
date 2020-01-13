@@ -45,4 +45,5 @@ test-suite test
     neato,
     HUnit
   other-modules:
-    TestNeato
+    TestNeato,
+    Utils

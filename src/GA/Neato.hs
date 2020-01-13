@@ -1,4 +1,4 @@
-module AI.Neato where
+module GA.Neato where
 
 import Data.Bits
 

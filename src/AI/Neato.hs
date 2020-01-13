@@ -41,3 +41,19 @@ countDisjoint (Genome genes1 _ _) (Genome genes2 _ _)
     where
       end  = succ $ min (getYoungestGene genes1) (getYoungestGene genes2)
       mask = bit end - 1
+
+calcMeanWeightDelta :: Genome -> Genome -> Double
+calcMeanWeightDelta genome1@(Genome genes1 weights1 _) genome2@(Genome genes2 weights2 _)
+  = weightDeltaSum / (fromIntegral $ popCount sharedGenes)
+    where
+      sharedGenes = fromInteger $ genes1 .&. genes2
+      weightDeltaSum   = sum [abs (getWeight genome1 i - getWeight genome2 i) | i <- [0..sharedGenes], testBit sharedGenes i]
+
+distance :: (Double, Double, Double) -> Genome -> Genome -> Double
+distance (c1, c2, c3) genome1 genome2
+  = c3 * meanWeightDelta + (c1 * excess + c2 * disjoint) / n
+    where
+      excess          = fromIntegral $ countExcess genome1 genome2
+      disjoint        = fromIntegral $ countExcess genome1 genome2
+      meanWeightDelta = calcMeanWeightDelta genome1 genome2
+      n = 1

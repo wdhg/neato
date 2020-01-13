@@ -42,6 +42,14 @@ countDisjointTests
     , ((bit 2 .|. bit 5, bit 1 .|. bit 4), 3)
     ]
 
+getMeanWeightDeltaTests :: Test
+getMeanWeightDeltaTests
+  = floatingCases (uncurry calcMeanWeightDelta)
+    [ ((Genome 1 [0.4] [], Genome 1 [0.6] []), 0.2)
+    , ((Genome 3 [0.4, 0.5] [], Genome 1 [0.6] []), 0.2)
+    , ((Genome 3 [0.4, 0.5] [], Genome 3 [0.6, 0.9] []), 0.3)
+    ]
+
 tests :: Test
 tests
   = TestList

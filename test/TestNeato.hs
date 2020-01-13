@@ -3,10 +3,11 @@ module TestNeato (tests) where
 import AI.Neato
 import Data.Bits
 import Test.HUnit
+import Utils
 
 getWeightTests :: Test
 getWeightTests
-  = TestList $ map (\((g, v), e) -> getWeight g v ~?= e)
+  = equalCases (uncurry getWeight)
     [ ((Genome 7 [0.3, 0.5, 0.1] [], 2), 0.1)
     , ((Genome 7 [0.3, 0.5, 0.1] [], 1), 0.5)
     , ((Genome 7 [0.3, 0.5, 0.1] [], 0), 0.3)
@@ -14,7 +15,7 @@ getWeightTests
 
 getYoungestGeneTests :: Test
 getYoungestGeneTests
-  = TestList $ map (\(v, e) -> getYoungestGene v ~?= e)
+  = equalCases getYoungestGene
     [ (bit 4, 4)
     , (bit 3 .|. bit 5, 5)
     , (bit 0, 0)
@@ -23,7 +24,7 @@ getYoungestGeneTests
 
 countExcessTests :: Test
 countExcessTests
-  = TestList $ map (\((g1, g2), e) -> (countExcess (Genome g1 [] []) (Genome g2 [] [])) ~?= e)
+  = equalCases (\(g1, g2) -> countExcess (Genome g1 [] []) (Genome g2 [] []))
     [ ((bit 0, bit 1), 1)
     , ((bit 0, bit 1 .|. bit 2), 2)
     , ((bit 4, bit 4), 0)
@@ -33,7 +34,7 @@ countExcessTests
 
 countDisjointTests :: Test
 countDisjointTests
-  = TestList $ map (\((g1, g2), e) -> (countDisjoint (Genome g1 [] []) (Genome g2 [] [])) ~?= e)
+  = equalCases (\(g1, g2) -> countDisjoint (Genome g1 [] []) (Genome g2 [] []))
     [ ((bit 0, bit 1), 1)
     , ((bit 0, bit 1 .|. bit 2), 1)
     , ((bit 4, bit 4), 0)

@@ -50,10 +50,14 @@ calcMeanWeightDelta genome1@(Genome genes1 _ _) genome2@(Genome genes2 _ _)
       weightDeltaSum   = sum [abs (getWeight genome1 i - getWeight genome2 i) | i <- [0..sharedGenes], testBit sharedGenes i]
 
 distance :: (Double, Double, Double) -> Genome -> Genome -> Double
-distance (c1, c2, c3) genome1 genome2
+distance (c1, c2, c3) genome1@(Genome genes1 _ _) genome2@(Genome genes2 _ _)
   = c3 * meanWeightDelta + (c1 * excess + c2 * disjoint) / n
     where
       excess          = fromIntegral $ countExcess genome1 genome2
       disjoint        = fromIntegral $ countExcess genome1 genome2
       meanWeightDelta = calcMeanWeightDelta genome1 genome2
-      n = 1
+      n
+        | n' < 20   = 1
+        | otherwise = n'
+          where
+            n' = fromIntegral $ max (popCount genes1) (popCount genes2)

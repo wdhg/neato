@@ -43,7 +43,7 @@ countDisjoint (Genome genes1 _ _) (Genome genes2 _ _)
       mask = bit end - 1
 
 calcMeanWeightDelta :: Genome -> Genome -> Double
-calcMeanWeightDelta genome1@(Genome genes1 weights1 _) genome2@(Genome genes2 weights2 _)
+calcMeanWeightDelta genome1@(Genome genes1 _ _) genome2@(Genome genes2 _ _)
   = weightDeltaSum / (fromIntegral $ popCount sharedGenes)
     where
       sharedGenes = fromInteger $ genes1 .&. genes2

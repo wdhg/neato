@@ -4,7 +4,7 @@ import qualified TestNeato
 tests :: Test
 tests
   = TestList
-  [ TestNeato.tests
+  [ "Neato.hs" ~: TestNeato.tests
   ]
 
 main :: IO Counts

@@ -44,8 +44,9 @@ countDisjointTests
 tests :: Test
 tests
   = TestList
-    [ getYoungestGeneTests
-    , countExcessTests
-    , countDisjointTests
-    , getWeightTests
+    [ "getYoungestGene" ~: getYoungestGeneTests
+    , "countExcess" ~: countExcessTests
+    , "countDisjoint" ~: countDisjointTests
+    , "getWeight" ~: getWeightTests
+    , "getMeanWeights" ~: getMeanWeightDeltaTests
     ]

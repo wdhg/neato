@@ -1,7 +1,7 @@
 module TestNeato (tests) where
 
-import AI.Neato
 import Data.Bits
+import GA.Neato
 import Test.HUnit
 import Utils
 

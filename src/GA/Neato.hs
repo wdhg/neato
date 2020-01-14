@@ -47,7 +47,11 @@ calcMeanWeightDelta genome1@(Genome genes1 _ _) genome2@(Genome genes2 _ _)
   = weightDeltaSum / (fromIntegral $ popCount sharedGenes)
     where
       sharedGenes = fromInteger $ genes1 .&. genes2
-      weightDeltaSum   = sum [abs (getWeight genome1 i - getWeight genome2 i) | i <- [0..sharedGenes], testBit sharedGenes i]
+      geneIndices = filter (testBit sharedGenes) [0..sharedGenes]
+      weightDeltaSum   = sum $ map calcWeightDelta geneIndices
+      calcWeightDelta :: Int -> Double
+      calcWeightDelta i
+        = abs (getWeight genome1 i - getWeight genome2 i)
 
 distance :: (Double, Double, Double) -> Genome -> Genome -> Double
 distance (c1, c2, c3) genome1@(Genome genes1 _ _) genome2@(Genome genes2 _ _)

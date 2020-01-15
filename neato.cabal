@@ -27,7 +27,7 @@ library
     -Wall
   build-depends:
     base >= 4.7 && < 5,
-    random
+    MonadRandom
 
 test-suite test
   type:

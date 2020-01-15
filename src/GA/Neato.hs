@@ -70,6 +70,6 @@ distance (c1, c2, c3) genome1@(Genome genes1 _ _) genome2@(Genome genes2 _ _)
           where
             n' = fromIntegral $ max (popCount genes1) (popCount genes2)
 
-findGenes :: GenePool -> Genome -> [Gene]
-findGenes genePool (Genome genes _ _)
+getGenes :: GenePool -> Genome -> [Gene]
+getGenes genePool (Genome genes _ _)
   = map (genePool !!) $ getIndices genes

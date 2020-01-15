@@ -59,9 +59,9 @@ getMeanWeightDeltaTests
     , ((Genome 3 [0.4, 0.5] [], Genome 3 [0.6, 0.9] []), 0.3)
     ]
 
-findGenesTests :: Test
-findGenesTests
-  = equalCases (\genes -> findGenes pool $ Genome genes [] [])
+getGenesTests :: Test
+getGenesTests
+  = equalCases (\genes -> getGenes pool $ Genome genes [] [])
     [ (bit 0 .|. bit 3 .|. bit 5, [(0, 0), (1, 2), (2, 3)])
     , (0, [])
     , (bit 2 .|. bit 4, [(0, 2), (1, 3)])
@@ -78,5 +78,5 @@ tests
     , "countDisjoint" ~: countDisjointTests
     , "getWeight" ~: getWeightTests
     , "getMeanWeights" ~: getMeanWeightDeltaTests
-    , "findGenes" ~: findGenesTests
+    , "getGenes" ~: getGenesTests
     ]

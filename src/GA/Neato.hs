@@ -19,6 +19,10 @@ data Genome
   = Genome GeneVector [Double] [Bool]
     deriving (Eq, Show)
 
+getIndices :: GeneVector -> [Int]
+getIndices genes
+  = filter (testBit genes) $ [0..fromIntegral genes]
+
 getWeight :: Genome -> Int -> Double
 getWeight (Genome genes weights _) gene
   = weights !! index
@@ -27,7 +31,7 @@ getWeight (Genome genes weights _) gene
 
 getYoungestGene :: GeneVector -> Int
 getYoungestGene genes
-  = (head $ dropWhile ((<= genes) . (2 ^)) [0..]) - 1
+  = maximum $ getIndices genes
 
 countExcess :: Genome -> Genome -> Int
 countExcess (Genome genes1 _ _) (Genome genes2 _ _)
@@ -68,4 +72,4 @@ distance (c1, c2, c3) genome1@(Genome genes1 _ _) genome2@(Genome genes2 _ _)
 
 findGenes :: GenePool -> Genome -> [Gene]
 findGenes genePool (Genome genes _ _)
-  = [genePool !! i | i <- [0..fromInteger genes], testBit genes i]
+  = map (genePool !!) $ getIndices genes

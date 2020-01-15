@@ -5,6 +5,15 @@ import GA.Neato
 import Test.HUnit
 import Utils
 
+getIndicesTests :: Test
+getIndicesTests
+  = equalCases getIndices
+    [ (bit 0 .|. bit 1 .|. bit 2, [0,1,2])
+    , (bit 0, [0])
+    , (0, [])
+    , (bit 3 .|. bit 6, [3, 6])
+    ]
+
 getWeightTests :: Test
 getWeightTests
   = equalCases (uncurry getWeight)
@@ -63,7 +72,8 @@ findGenesTests
 tests :: Test
 tests
   = TestList
-    [ "getYoungestGene" ~: getYoungestGeneTests
+    [ "getIndices" ~: getIndicesTests
+    , "getYoungestGene" ~: getYoungestGeneTests
     , "countExcess" ~: countExcessTests
     , "countDisjoint" ~: countDisjointTests
     , "getWeight" ~: getWeightTests

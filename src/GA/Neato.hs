@@ -73,3 +73,8 @@ distance (c1, c2, c3) genome1@(Genome genes1 _ _) genome2@(Genome genes2 _ _)
 getGenes :: GenePool -> Genome -> [Gene]
 getGenes genePool (Genome genes _ _)
   = map (genePool !!) $ getIndices genes
+
+geneIndex :: GenePool -> Gene -> Maybe Int
+geneIndex pool gene
+  | gene `elem` pool = Just $ length $ takeWhile (/= gene) pool
+  | otherwise        = Nothing

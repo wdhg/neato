@@ -69,6 +69,15 @@ getGenesTests
     where
       pool = [(0, 0), (0, 1), (0, 2), (1, 2), (1, 3), (2, 3)]
 
+geneIndexTests :: Test
+geneIndexTests
+  = equalCases (uncurry geneIndex)
+    [ (([], (0, 0)), Nothing)
+    , (([(0, 0)], (0, 0)), Just 0)
+    , (([(0, 0), (0, 1)], (0, 1)), Just 1)
+    , (([(0, 0), (0, 1)], (0, 2)), Nothing)
+    ]
+
 tests :: Test
 tests
   = TestList
@@ -79,4 +88,5 @@ tests
     , "getWeight" ~: getWeightTests
     , "getMeanWeights" ~: getMeanWeightDeltaTests
     , "getGenes" ~: getGenesTests
+    , "geneIndex" ~: geneIndexTests
     ]

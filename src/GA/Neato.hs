@@ -78,3 +78,9 @@ geneIndex :: GenePool -> Gene -> Maybe Int
 geneIndex pool gene
   | gene `elem` pool = Just $ length $ takeWhile (/= gene) pool
   | otherwise        = Nothing
+
+getGeneInfo :: Genome -> Int -> (Double, Bool)
+getGeneInfo (Genome genes weights states) geneIndex
+  = (weights !! index, states !! index)
+    where
+      index = length $ takeWhile (/= geneIndex) $ getIndices genes

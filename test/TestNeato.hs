@@ -78,6 +78,13 @@ geneIndexTests
     , (([(0, 0), (0, 1)], (0, 2)), Nothing)
     ]
 
+getGeneInfoTests :: Test
+getGeneInfoTests
+  = equalCases (uncurry getGeneInfo)
+    [ ((Genome 1 [0.1] [True], 0), (0.1, True))
+    , ((Genome 3 [0.1, 0.2] [True, False], 1), (0.2, False))
+    ]
+
 tests :: Test
 tests
   = TestList
@@ -89,4 +96,5 @@ tests
     , "getMeanWeights" ~: getMeanWeightDeltaTests
     , "getGenes" ~: getGenesTests
     , "geneIndex" ~: geneIndexTests
+    , "getGeneInfo" ~: getGeneInfoTests
     ]

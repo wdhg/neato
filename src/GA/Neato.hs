@@ -84,3 +84,12 @@ getGeneInfo (Genome genes weights states) geneIndex
   = (weights !! index, states !! index)
     where
       index = length $ takeWhile (/= geneIndex) $ getIndices genes
+
+addNode :: Genome -> Int -> Genome
+addNode genome@(Genome genes weights states) geneIndex
+  | testBit genes geneIndex = Genome genes' weights' states'
+  | otherwise               = genome
+    where
+      genes'   = undefined
+      weights' = undefined
+      states'  = undefined

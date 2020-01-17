@@ -5,6 +5,14 @@ import GA.Neato
 import Test.HUnit
 import Utils
 
+setTests :: Test
+setTests
+  = equalCases set
+    [ ([1,1,2,3,3], [1,2,3])
+    , ([0,0,0,0,0], [0])
+    , ([], [])
+    ]
+
 getIndicesTests :: Test
 getIndicesTests
   = equalCases getIndices

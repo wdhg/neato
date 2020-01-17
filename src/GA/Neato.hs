@@ -19,6 +19,12 @@ data Genome
   = Genome GeneVector [Double] [Bool]
     deriving (Eq, Show)
 
+set :: Eq a => [a] -> [a]
+set []
+ = []
+set (item : items)
+  = item : (filter (/= item) $ set items)
+
 getIndices :: GeneVector -> [Int]
 getIndices genes
   = filter (testBit genes) $ [0..fromIntegral genes]

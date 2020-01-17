@@ -85,8 +85,8 @@ getGeneInfo (Genome genes weights states) geneIndex
     where
       index = length $ takeWhile (/= geneIndex) $ getIndices genes
 
-addNode :: Genome -> Int -> Genome
-addNode genome@(Genome genes weights states) geneIndex
+addNeuron :: GenePool -> Genome -> Int -> Genome
+addNeuron pool genome@(Genome genes weights states) geneIndex
   | testBit genes geneIndex = Genome genes' weights' states'
   | otherwise               = genome
     where

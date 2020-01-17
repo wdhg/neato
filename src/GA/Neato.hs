@@ -74,8 +74,8 @@ getGenes :: GenePool -> Genome -> [Gene]
 getGenes genePool (Genome genes _ _)
   = map (genePool !!) $ getIndices genes
 
-geneIndex :: GenePool -> Gene -> Maybe Int
-geneIndex pool gene
+getGeneIndex :: GenePool -> Gene -> Maybe Int
+getGeneIndex pool gene
   | gene `elem` pool = Just $ length $ takeWhile (/= gene) pool
   | otherwise        = Nothing
 

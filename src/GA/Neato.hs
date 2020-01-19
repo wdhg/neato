@@ -3,8 +3,11 @@ module GA.Neato where
 type Node
   = Int
 
+type ID
+  = Int
+
 data Gene
-  = Gene Node Node Double Bool Int
+  = Gene Node Node Double Bool ID
 
 type GenePool
   = [Gene]

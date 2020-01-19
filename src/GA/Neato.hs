@@ -11,6 +11,9 @@ type GeneID
 data Gene
   = Gene Node Node Double Bool GeneID
 
+type GeneAlignment
+  = (Maybe Gene, Maybe Gene)
+
 type GenePool
   = [Gene]
 
@@ -40,7 +43,7 @@ instance Show Genome where
   show (Genome genes)
     = unlines $ map show genes
 
-alignGenes :: Genome -> Genome -> [(Maybe Gene, Maybe Gene)]
+alignGenes :: Genome -> Genome -> GeneAlignment
 alignGenes (Genome genes1) (Genome genes2)
   = alignGenes' (sort genes1) (sort genes2)
     where

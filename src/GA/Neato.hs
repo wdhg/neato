@@ -36,10 +36,10 @@ instance Show Genome where
   show (Genome genes)
     = unlines $ map show genes
 
-getGeneID :: Gene -> GeneID
-getGeneID (Gene _ _ _ _ geneID)
-  = geneID
+isGene :: GeneID -> Gene -> Bool
+isGene geneID (Gene _ _ _ _ geneID')
+  = geneID == geneID'
 
 getGene :: Genome -> GeneID -> Maybe Gene
 getGene (Genome genes) geneID
-  = listToMaybe $ dropWhile ((/= geneID) . getGeneID) genes
+  = listToMaybe $ dropWhile (not . isGene geneID) genes

@@ -17,8 +17,8 @@ data Genome
     deriving Eq
 
 instance Eq Gene where
-  (Gene in1 out1 _ _ _) == (Gene in2 out2 _ _ _)
-    = in1 == in2 && out1 == out2
+  (Gene _ _ _ _ geneID1) == (Gene _ _ _ _ geneID2)
+    = geneID1 == geneID2
 
 instance Show Gene where
   show (Gene inNode outNode weight active innovation)

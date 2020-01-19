@@ -33,3 +33,8 @@ instance Show Gene where
 instance Show Genome where
   show (Genome genes)
     = unlines $ map show genes
+
+getGene :: Genome -> Gene -> Maybe Gene
+getGene (Genome genes) gene
+  | gene `elem` genes = Just $ head $ dropWhile (/= gene) genes
+  | otherwise         = Nothing

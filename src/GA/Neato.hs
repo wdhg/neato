@@ -1,6 +1,6 @@
 module GA.Neato where
 
-import Data.Maybe (listToMaybe)
+import Data.List (sort)
 
 type Node
   = Int
@@ -22,6 +22,10 @@ instance Eq Gene where
   (Gene _ _ _ _ geneID1) == (Gene _ _ _ _ geneID2)
     = geneID1 == geneID2
 
+instance Ord Gene where
+  (Gene _ _ _ _ geneID1) <= (Gene _ _ _ _ geneID2)
+    = geneID1 <= geneID2
+
 instance Show Gene where
   show (Gene inNode outNode weight active innovation)
     = unwords
@@ -36,10 +40,19 @@ instance Show Genome where
   show (Genome genes)
     = unlines $ map show genes
 
-isGene :: GeneID -> Gene -> Bool
-isGene geneID (Gene _ _ _ _ geneID')
-  = geneID == geneID'
-
-getGene :: Genome -> GeneID -> Maybe Gene
-getGene (Genome genes) geneID
-  = listToMaybe $ dropWhile (not . isGene geneID) genes
+alignGenes :: Genome -> Genome -> [(Maybe Gene, Maybe Gene)]
+alignGenes (Genome genes1) (Genome genes2)
+  = alignGenes' (sort genes1) (sort genes2)
+    where
+      left, right :: Gene -> (Maybe Gene, Maybe Gene)
+      left gene  = (Just gene, Nothing)
+      right gene = (Nothing, Just gene)
+      alignGenes' :: [Gene] -> [Gene] -> [(Maybe Gene, Maybe Gene)]
+      alignGenes' [] genes2'
+        = map right genes2'
+      alignGenes' genes1' []
+        = map left genes1'
+      alignGenes' (gene1 : genes1') (gene2 : genes2')
+        | gene1 > gene2 = right gene2 : alignGenes' (gene1 : genes1') genes2'
+        | gene1 < gene2 = left gene1 : alignGenes' genes1' (gene2 : genes2')
+        | otherwise     = (Just gene1, Just gene2) : alignGenes' genes1' genes2'

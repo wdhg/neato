@@ -1,10 +1,10 @@
+import qualified GenomeTest
 import           Test.HUnit
-import qualified TestNeato
 
 tests :: Test
 tests
   = TestList
-  [ "Neato.hs" ~: TestNeato.tests
+  [ "Neato/Genome.hs" ~: GenomeTest.tests
   ]
 
 main :: IO Counts

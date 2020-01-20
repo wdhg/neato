@@ -20,7 +20,12 @@ library
   hs-source-dirs:
     src
   exposed-modules:
-    GA.Neato
+    GA.Neato,
+    GA.Neato.Genome,
+    GA.Neato.Network,
+    GA.Neato.Population,
+    GA.Neato.Simulation,
+    GA.Neato.Species
   default-language:
     Haskell2010
   ghc-options:
@@ -45,5 +50,5 @@ test-suite test
     neato,
     HUnit
   other-modules:
-    TestNeato,
+    GenomeTest,
     Utils

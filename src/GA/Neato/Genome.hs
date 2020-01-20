@@ -1,7 +1,5 @@
 module GA.Neato.Genome where
 
-import Data.List (sort)
-
 type Node
   = Int
 

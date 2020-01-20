@@ -31,13 +31,13 @@ instance Ord Gene where
     = geneID1 <= geneID2
 
 instance Show Gene where
-  show (Gene inNode outNode weight active innovation)
+  show (Gene inNode outNode weight state innovation)
     = unwords
       [ "GENE"
       , "[" ++ show innovation ++ "]"
       , show inNode, "-->", show outNode
       , "(" ++ show weight
-      , show active ++ ")"
+      , show state ++ ")"
       ]
 
 instance Show Genome where

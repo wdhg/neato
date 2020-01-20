@@ -43,3 +43,15 @@ instance Show Gene where
 instance Show Genome where
   show (Genome genes)
     = unlines $ map show genes
+
+distance :: (Double, Double, Double) -> Genome -> Genome -> Double
+distance (c1, c2, c3) (Genome genes1) (Genome genes2)
+  = c3 * meanWeightDelta + (c1 * disjoint + c2 * excess) / n
+    where
+      n = fromIntegral $ max (length genes1) (length genes2)
+      meanWeightDelta
+        = undefined
+      disjoint
+        = undefined
+      excess
+        = undefined

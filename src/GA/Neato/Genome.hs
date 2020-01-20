@@ -66,19 +66,40 @@ alignGenes (Genome genes1) (Genome genes2)
         | g1 > g2   = right g2 : alignGenes' gs1 gs2'
         | otherwise = (Just g1, Just g2) : alignGenes' gs1' gs2'
 
+isSymmetric :: Aligned -> Bool
+isSymmetric (Just _, Just _)
+  = True
+isSymmetric _
+  = False
+
 calcMeanWeightDelta :: [Aligned] -> Double
 calcMeanWeightDelta alignment
   = (sum $ map calc symmetric) / (fromIntegral $ length symmetric)
     where
       symmetric = filter isSymmetric alignment
-      isSymmetric :: Aligned -> Bool
-      isSymmetric (Just _, Just _)
-        = True
-      isSymmetric _
-        = False
       calc :: Aligned -> Double
       calc (Just (Gene _ _ weight1 _ _), Just (Gene _ _ weight2 _ _))
         = abs $ weight1 - weight2
+
+
+countDisjointExcess :: [Aligned] -> (Int, Int)
+countDisjointExcess alignment
+  = (length $ filter (not . isSymmetric) disjoint, length excess)
+    where
+      (disjoint, excess)
+        = until isExcess pop ([], alignment)
+      pop :: ([Aligned], [Aligned]) -> ([Aligned], [Aligned])
+      pop (left, item : right)
+        = (item : left, right)
+      isExcess :: ([Aligned], [Aligned]) -> Bool
+      isExcess (_, [])
+        = True
+      isExcess (_, alignment')
+        = (check fst) || (check snd)
+          where
+            check func
+              = all ((== Nothing) . func) alignment'
+
 
 distance :: (Double, Double, Double) -> Genome -> Genome -> Double
 distance (c1, c2, c3) genome1@(Genome genes1) genome2@(Genome genes2)

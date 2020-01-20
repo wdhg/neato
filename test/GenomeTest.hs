@@ -50,9 +50,28 @@ calcMeanWeightDeltaTests
       )
     ]
 
+countDisjointExcessTests :: Test
+countDisjointExcessTests
+  = equalCases countDisjointExcess
+    [ ( [ (Just gene00, Just gene01)
+        , (Nothing, Just gene10)
+        , (Just gene20, Nothing)
+        ]
+      , (1, 1)
+      )
+    , ( [ (Just gene00, Nothing)
+        , (Just gene10, Just gene11)
+        , (Nothing, Just gene21)
+        , (Just gene30, Just gene31)
+        ]
+      , (2, 0)
+      )
+    ]
+
 tests :: Test
 tests
   = TestList
     [ "alignGenes" ~: alignGenesTests
     , "calcMeanWeightDelta" ~: calcMeanWeightDeltaTests
+    , "countDisjointExcess" ~: countDisjointExcessTests
     ]

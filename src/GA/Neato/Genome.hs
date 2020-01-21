@@ -1,6 +1,7 @@
 module GA.Neato.Genome where
 
-import Data.List (sort)
+import Data.List     (sort)
+import System.Random
 
 type Node
   = Int
@@ -117,3 +118,23 @@ distance (c1, c2, c3) genome1@(Genome genes1) genome2@(Genome genes2)
         = fromIntegral disjoint
       excess'
         = fromIntegral excess
+
+mutateNode :: RandomGen g => g -> (Genome, GenePool) -> ((Genome, GenePool), g)
+mutateNode gen genome
+  = undefined
+
+mutateLink :: RandomGen g => g -> (Genome, GenePool) -> ((Genome, GenePool), g)
+mutateLink gen genome
+  = undefined
+
+mutateGene :: RandomGen g => g -> Gene -> (Gene, g)
+mutateGene gen gene
+  = undefined
+
+mutateGenes :: RandomGen g => g -> Genome -> (Genome, g)
+mutateGenes gen genome
+  = undefined
+
+mutate :: RandomGen g => g -> Genome -> (Genome, g)
+mutate gen genome
+  = undefined

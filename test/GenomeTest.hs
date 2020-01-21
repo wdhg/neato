@@ -48,6 +48,11 @@ calcMeanWeightDeltaTests
         ]
       , 1.05
       )
+    , ( [ (Just gene00, Nothing)
+        , (Nothing, Just gene10)
+        ]
+      , 0.0
+      )
     ]
 
 countDisjointExcessTests :: Test
@@ -68,10 +73,36 @@ countDisjointExcessTests
       )
     ]
 
+distanceTests :: Test
+distanceTests
+  = floatingCases (\(g1, g2) -> distance (1, 1, 1) (Genome g1) (Genome g2))
+    [ ( ( [gene00, gene10]
+        , [gene00, gene10]
+        )
+      , 0.0
+      )
+    , ( ( [gene00, gene10]
+        , [gene01, gene11]
+        )
+      , 0.3
+      )
+    , ( ( [gene00, gene20]
+        , [gene01, gene30]
+        )
+      , 1.5
+      )
+    , ( ( [gene00]
+        , [gene10]
+        )
+      , 2.0
+      )
+    ]
+
 tests :: Test
 tests
   = TestList
     [ "alignGenes" ~: alignGenesTests
     , "calcMeanWeightDelta" ~: calcMeanWeightDeltaTests
     , "countDisjointExcess" ~: countDisjointExcessTests
+    , "distance" ~: distanceTests
     ]

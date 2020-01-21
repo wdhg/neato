@@ -74,7 +74,8 @@ isSymmetric _
 
 calcMeanWeightDelta :: [Aligned] -> Double
 calcMeanWeightDelta alignment
-  = (sum $ map calc symmetric) / (fromIntegral $ length symmetric)
+  | null symmetric = 0.0
+  | otherwise = (sum $ map calc symmetric) / (fromIntegral $ length symmetric)
     where
       symmetric = filter isSymmetric alignment
       calc :: Aligned -> Double
@@ -103,14 +104,16 @@ countDisjointExcess alignment
 
 distance :: (Double, Double, Double) -> Genome -> Genome -> Double
 distance (c1, c2, c3) genome1@(Genome genes1) genome2@(Genome genes2)
-  = c3 * meanWeightDelta + (c1 * disjoint + c2 * excess) / n
+  = meanWeightDelta + (c1 * disjoint' + c2 * excess') / n
     where
       n = fromIntegral $ max (length genes1) (length genes2)
       alignment
         = alignGenes genome1 genome2
       meanWeightDelta
-        = calcMeanWeightDelta alignment
-      disjoint
-        = undefined
-      excess
-        = undefined
+        = c3 * calcMeanWeightDelta alignment
+      (disjoint, excess)
+        = countDisjointExcess alignment
+      disjoint'
+        = fromIntegral disjoint
+      excess'
+        = fromIntegral excess

@@ -8,6 +8,8 @@ data DummyGen
     deriving Show
 
 instance RandomGen DummyGen where
+  next (DummyGen lower upper [])
+    = (0, DummyGen lower upper [])
   next (DummyGen lower upper (value : values))
     = (value, DummyGen lower upper values)
   genRange (DummyGen lower upper _)

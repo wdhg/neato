@@ -48,7 +48,8 @@ test-suite test
   build-depends:
     base >= 4.7 && < 5,
     neato,
-    HUnit
+    HUnit,
+    random
   other-modules:
     GenomeTest,
     Utils

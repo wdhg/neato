@@ -119,6 +119,31 @@ distance (c1, c2, c3) genome1@(Genome genes1) genome2@(Genome genes2)
       excess'
         = fromIntegral excess
 
+perturbWeight :: RandomGen g => g -> Weight -> (Weight, g)
+perturbWeight gen weight
+  = (weight + (value * delta * 2 - delta), gen')
+    where
+      delta         = 0.1
+      value :: Double
+      (value, gen') = randomR (0, 1) gen
+
+newWeight :: RandomGen g => g -> (Weight, g)
+newWeight gen
+  = (value * maxWeight * 2 - maxWeight, gen')
+    where
+      maxWeight     = 2
+      value :: Double
+      (value, gen') = randomR (0, 1) gen
+
+mutateWeight :: RandomGen g => g -> Weight -> (Weight, g)
+mutateWeight gen weight
+  | value < perturbChance = perturbWeight gen' weight
+  | otherwise             = newWeight gen'
+    where
+      perturbChance = 0.9
+      value :: Double
+      (value, gen') = randomR (0, 1) gen
+
 -- pick a gene
 -- disable it
 -- create two new genes in and out of a new node

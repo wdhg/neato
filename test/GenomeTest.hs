@@ -1,6 +1,7 @@
 module GenomeTest (tests) where
 
 import GA.Neato.Genome
+import System.Random
 import Test.HUnit
 import Utils
 
@@ -98,6 +99,39 @@ distanceTests
       )
     ]
 
+-- values are determined in GHCI
+-- TODO find a better way of testing eg supplying the random numbers
+-- TODO test returned RandomGen is different
+perturbWeightTests :: Test
+perturbWeightTests
+  = floatingCases (fst . uncurry perturbWeight)
+    [ ((mkStdGen 0, 0.4), 0.49742936306782304)
+    , ((mkStdGen 1, 0.6), 0.5155580750166687)
+    , ((mkStdGen 2, -0.7), -0.7652551590782738)
+    , ((mkStdGen 3, 1.4), 1.3539316068267833)
+    ]
+
+-- values are determined in GHCI
+-- TODO find a better way of testing eg supplying the random numbers
+-- TODO test returned RandomGen is different
+newWeightTests :: Test
+newWeightTests
+  = floatingCases (fst . newWeight)
+    [ (mkStdGen 0, 1.9485872613564603)
+    , (mkStdGen 1, -1.6888384996666264)
+    , (mkStdGen 2, -1.305103181565478)
+    , (mkStdGen 3, -0.9213678634643303)
+    ]
+
+mutateWeightTests :: Test
+mutateWeightTests
+  = floatingCases (fst . uncurry mutateWeight)
+    [ ((mkStdGen 0, 0.4), -1.729556574405367)
+    , ((mkStdGen 1, 0.6), 0.6799820005890711)
+    , ((mkStdGen 2, -0.7), -0.6535582177853032)
+    , ((mkStdGen 3, 1.4), 1.412909813122993)
+    ]
+
 tests :: Test
 tests
   = TestList
@@ -105,4 +139,7 @@ tests
     , "calcMeanWeightDelta" ~: calcMeanWeightDeltaTests
     , "countDisjointExcess" ~: countDisjointExcessTests
     , "distance" ~: distanceTests
+    , "perturbWeight" ~: perturbWeightTests
+    , "newWeight" ~: newWeightTests
+    , "mutateWeight" ~: mutateWeightTests
     ]

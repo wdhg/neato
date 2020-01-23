@@ -1,6 +1,5 @@
 module Utils where
 
-import System.Random
 import Test.HUnit
 
 equalCases :: (Show b, Eq b) => (a -> b) -> [(a, b)] -> Test

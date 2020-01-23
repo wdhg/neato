@@ -24,7 +24,7 @@ type Aligned
 type GenePool
   = [Gene]
 
-data Genome
+newtype Genome
   = Genome [Gene]
     deriving Eq
 

@@ -5,6 +5,7 @@ import System.Random
 import Test.HUnit
 import Utils
 
+gene00, gene01, gene10, gene11, gene20, gene21, gene30, gene31 :: Gene
 gene00 = Gene 0 1 0.1 True 0
 gene01 = Gene 0 1 0.6 True 0
 gene10 = Gene 0 2 0.7 True 1

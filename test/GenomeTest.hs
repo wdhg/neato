@@ -124,6 +124,9 @@ newWeightTests
     , (mkStdGen 3, -0.9213678634643303)
     ]
 
+-- values are determined in GHCI
+-- TODO find a better way of testing eg supplying the random numbers
+-- TODO test returned RandomGen is different
 mutateWeightTests :: Test
 mutateWeightTests
   = floatingCases (fst . uncurry mutateWeight)

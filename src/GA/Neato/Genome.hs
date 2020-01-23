@@ -119,20 +119,26 @@ distance (c1, c2, c3) genome1@(Genome genes1) genome2@(Genome genes2)
       excess'
         = fromIntegral excess
 
+-- pick a gene
+-- disable it
+-- create two new genes in and out of a new node
+-- add it to genome and genepool
 mutateNode :: RandomGen g => g -> (Genome, GenePool) -> ((Genome, GenePool), g)
 mutateNode gen genome
   = undefined
 
+-- pick two unlinked nodes
+-- create new gene between nodes
+-- add to genome and genepool
 mutateLink :: RandomGen g => g -> (Genome, GenePool) -> ((Genome, GenePool), g)
 mutateLink gen genome
   = undefined
 
-mutateGene :: RandomGen g => g -> Gene -> (Gene, g)
-mutateGene gen gene
-  = undefined
-
+-- map over each gene
+--   maybe change weight
+--   maybe change state
 mutateGenes :: RandomGen g => g -> Genome -> (Genome, g)
-mutateGenes gen genome
+mutateGenes gen (Genome genes)
   = undefined
 
 mutate :: RandomGen g => g -> Genome -> (Genome, g)

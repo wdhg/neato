@@ -144,6 +144,21 @@ mutateWeight gen weight
       value :: Double
       (value, gen') = randomR (0, 1) gen
 
+mutateGene :: RandomGen g => g -> Gene -> (Gene, g)
+mutateGene gen gene
+  = (gene, gen)
+
+-- map over each gene
+--   maybe change weight
+--   maybe change state
+mutateGenes :: RandomGen g => g -> Genome -> (Genome, g)
+-- Pre: non-empty Genome
+mutateGenes gen (Genome (gene : genes))
+  = (Genome $ map fst mutations, snd $ last mutations)
+    where
+      mutations
+        = scanl (\(_, gen') gene' -> mutateGene gen' gene') (gene, gen) genes
+
 -- pick a gene
 -- disable it
 -- create two new genes in and out of a new node
@@ -157,13 +172,6 @@ mutateNode gen genome
 -- add to genome and genepool
 mutateLink :: RandomGen g => g -> (Genome, GenePool) -> ((Genome, GenePool), g)
 mutateLink gen genome
-  = undefined
-
--- map over each gene
---   maybe change weight
---   maybe change state
-mutateGenes :: RandomGen g => g -> Genome -> (Genome, g)
-mutateGenes gen (Genome genes)
   = undefined
 
 mutate :: RandomGen g => g -> Genome -> (Genome, g)

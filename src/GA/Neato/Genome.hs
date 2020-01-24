@@ -144,10 +144,6 @@ mutateWeight gen weight
       value :: Double
       (value, gen') = randomR (0, 1) gen
 
-mutateGene :: RandomGen g => g -> Gene -> (Gene, g)
-mutateGene gen gene
-  = (gene, gen)
-
 -- map over each gene
 --   maybe change weight
 --   maybe change state
@@ -158,6 +154,11 @@ mutateGenes gen (Genome (gene : genes))
     where
       mutations
         = scanl (\(_, gen') gene' -> mutateGene gen' gene') (gene, gen) genes
+      mutateGene :: RandomGen g => g -> Gene -> (Gene, g)
+      mutateGene gen' (Gene inNode outNode weight state geneID)
+        = (Gene inNode outNode weight' state geneID, gene'')
+          where
+            (weight', gene'') = mutateWeight gen' weight
 
 -- pick a gene
 -- disable it

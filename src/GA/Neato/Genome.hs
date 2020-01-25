@@ -167,15 +167,15 @@ mutateGenes gen (Genome (gene : genes))
 -- disable it
 -- create two new genes in and out of a new node
 -- add it to genome and genepool
-mutateNode :: RandomGen g => g -> (Genome, GenePool) -> ((Genome, GenePool), g)
-mutateNode gen genome
+mutateNode :: RandomGen g => g -> Genome -> GenePool -> ((Genome, GenePool), g)
+mutateNode gen genome genePool
   = undefined
 
 -- pick two unlinked nodes
 -- create new gene between nodes
 -- add to genome and genepool
-mutateLink :: RandomGen g => g -> (Genome, GenePool) -> ((Genome, GenePool), g)
-mutateLink gen genome
+mutateLink :: RandomGen g => g -> Genome -> GenePool -> ((Genome, GenePool), g)
+mutateLink gen genome genePool
   = undefined
 
 mutate :: RandomGen g => g -> Genome -> (Genome, g)

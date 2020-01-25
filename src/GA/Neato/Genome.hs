@@ -6,8 +6,8 @@ import System.Random
 type Node
   = Int
 
-type GeneID
-  = Int
+type Link
+  = (Node, Node)
 
 type Weight
   = Double
@@ -15,29 +15,32 @@ type Weight
 type State
   = Bool
 
+type GeneID
+  = Int
+
 data Gene
-  = Gene Node Node Weight State GeneID
+  = Gene Link Weight State GeneID
 
 type Aligned
   = (Maybe Gene, Maybe Gene)
 
 type GenePool
-  = [Gene]
+  = [Link]
 
 newtype Genome
   = Genome [Gene]
     deriving Eq
 
 instance Eq Gene where
-  (Gene _ _ _ _ geneID1) == (Gene _ _ _ _ geneID2)
+  (Gene _ _ _ geneID1) == (Gene _ _ _ geneID2)
     = geneID1 == geneID2
 
 instance Ord Gene where
-  (Gene _ _ _ _ geneID1) <= (Gene _ _ _ _ geneID2)
+  (Gene _ _ _ geneID1) <= (Gene _ _ _ geneID2)
     = geneID1 <= geneID2
 
 instance Show Gene where
-  show (Gene inNode outNode weight state innovation)
+  show (Gene (inNode, outNode) weight state innovation)
     = unwords
       [ "GENE"
       , "[" ++ show innovation ++ "]"
@@ -80,7 +83,7 @@ calcMeanWeightDelta alignment
     where
       symmetric = filter isSymmetric alignment
       calc :: Aligned -> Double
-      calc (Just (Gene _ _ weight1 _ _), Just (Gene _ _ weight2 _ _))
+      calc (Just (Gene _ weight1 _ _), Just (Gene _ weight2 _ _))
         = abs $ weight1 - weight2
 
 
@@ -155,8 +158,8 @@ mutateGenes gen (Genome (gene : genes))
       mutations
         = scanl (\(_, gen') gene' -> mutateGene gen' gene') (gene, gen) genes
       mutateGene :: RandomGen g => g -> Gene -> (Gene, g)
-      mutateGene gen' (Gene inNode outNode weight state geneID)
-        = (Gene inNode outNode weight' state geneID, gene'')
+      mutateGene gen' (Gene link weight state geneID)
+        = (Gene link weight' state geneID, gene'')
           where
             (weight', gene'') = mutateWeight gen' weight
 

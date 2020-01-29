@@ -27,8 +27,11 @@ type Aligned
 type GenePool
   = [(Link, GeneID)]
 
-newtype Genome
-  = Genome [Gene]
+type IOCount
+  = (Int, Int)
+
+data Genome
+  = Genome IOCount [Gene]
     deriving Eq
 
 instance Eq Gene where
@@ -50,11 +53,11 @@ instance Show Gene where
       ]
 
 instance Show Genome where
-  show (Genome genes)
+  show (Genome _ genes)
     = unlines $ map show genes
 
 alignGenes :: Genome -> Genome -> [Aligned]
-alignGenes (Genome genes1) (Genome genes2)
+alignGenes (Genome _ genes1) (Genome _ genes2)
   = alignGenes' (sort genes1) (sort genes2)
     where
       left, right :: Gene -> Aligned
@@ -107,7 +110,7 @@ countDisjointExcess alignment
 
 
 distance :: (Double, Double, Double) -> Genome -> Genome -> Double
-distance (c1, c2, c3) genome1@(Genome genes1) genome2@(Genome genes2)
+distance (c1, c2, c3) genome1@(Genome _ genes1) genome2@(Genome _ genes2)
   = meanWeightDelta + (c1 * disjoint' + c2 * excess') / n
     where
       n = fromIntegral $ max (length genes1) (length genes2)
@@ -152,8 +155,8 @@ mutateWeight gen weight
 --   maybe change state
 mutateGenes :: RandomGen g => g -> Genome -> (Genome, g)
 -- Pre: non-empty Genome
-mutateGenes gen (Genome (gene : genes))
-  = (Genome $ map fst mutations, snd $ last mutations)
+mutateGenes gen (Genome io (gene : genes))
+  = (Genome io $ map fst mutations, snd $ last mutations)
     where
       mutations
         = scanl (\(_, gen') gene' -> mutateGene gen' gene') (gene, gen) genes
@@ -176,7 +179,7 @@ getNodes ((Gene (inNode, outNode) _ _ _) : genes)
 
 
 getNextNode :: Genome -> Node
-getNextNode (Genome genes)
+getNextNode (Genome _ genes)
   = head $ dropWhile (`elem` nodes) [0..]
     where
       nodes
@@ -198,8 +201,8 @@ getGeneID pool link
 -- create two new genes in and out of a new node
 -- add it to genome and genepool
 mutateNode :: RandomGen g => g -> Genome -> GenePool -> ((Genome, GenePool), g)
-mutateNode gen genome@(Genome genes) pool
-  = ((Genome $ before ++ (gene : geneIn : geneOut : after), pool''), gen')
+mutateNode gen genome@(Genome io genes) pool
+  = ((Genome io $ before ++ (gene : geneIn : geneOut : after), pool''), gen')
     where
       -- -2 from length so pattern always matches
       index :: Int
@@ -214,7 +217,7 @@ mutateNode gen genome@(Genome genes) pool
       gene                = Gene (inNode, outNode) weight False geneID
 
 getUnlinked :: Genome -> [Link]
-getUnlinked genome@(Genome genes)
+getUnlinked genome@(Genome _ genes)
   = filter (\link -> notLinked link && notCyclic link) links
     where
       nodes        = getNodes genes
@@ -230,8 +233,6 @@ getUnlinked genome@(Genome genes)
       notCyclic (inNode, outNode)
         | inNode == outNode = False
         | otherwise         = notLinked (outNode, inNode)
-
-
 
 -- pick two unlinked nodes
 -- create new gene between nodes

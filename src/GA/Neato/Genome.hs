@@ -194,12 +194,12 @@ mutateNode gen genome@(Genome genes) pool
       (index, gen') = randomR (0, length genes - 2) gen
       (before, ((Gene (inNode, outNode) weight state geneID) : after))
         = splitAt index genes
-      newNode           = getNextNode genome
-      (geneInID, pool') = getGeneID pool (inNode, newNode)
-      geneIn            = Gene (inNode, newNode) weight state geneInID
+      newNode             = getNextNode genome
+      (geneInID, pool')   = getGeneID pool (inNode, newNode)
+      geneIn              = Gene (inNode, newNode) weight state geneInID
       (geneOutID, pool'') = getGeneID pool' (newNode, outNode)
-      geneOut           = Gene (newNode, outNode) 1.0 state geneOutID
-      gene              = Gene (inNode, outNode) weight False geneID
+      geneOut             = Gene (newNode, outNode) 1.0 state geneOutID
+      gene                = Gene (inNode, outNode) weight False geneID
 
 -- pick two unlinked nodes
 -- create new gene between nodes

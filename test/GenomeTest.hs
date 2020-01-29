@@ -153,6 +153,17 @@ getNextNodeTests
     , ([gene00, gene10, gene20, gene30], 4)
     ]
 
+getGeneIDTests :: Test
+getGeneIDTests
+  = equalCases (getGeneID pool)
+    [ ((0, 1), (0, pool))
+    , ((0, 2), (1, pool))
+    , ((0, 3), (2, ((0, 3), 2) : pool))
+    , ((1, 2), (2, ((1, 2), 2) : pool))
+    ]
+      where
+        pool = [((0, 1), 0), ((0, 2), 1)]
+
 tests :: Test
 tests
   = TestList
@@ -165,4 +176,5 @@ tests
     , "mutateWeight" ~: mutateWeightTests
     , "getNodes" ~: getNodesTests
     , "getNextNode" ~: getNextNodeTests
+    , "getGeneID" ~: getGeneIDTests
     ]

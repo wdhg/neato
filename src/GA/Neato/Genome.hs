@@ -25,7 +25,7 @@ type Aligned
   = (Maybe Gene, Maybe Gene)
 
 type GenePool
-  = [Link]
+  = [(Link, GeneID)]
 
 newtype Genome
   = Genome [Gene]
@@ -163,13 +163,43 @@ mutateGenes gen (Genome (gene : genes))
           where
             (weight', gene'') = mutateWeight gen' weight
 
+getNextNode :: Genome -> Node
+getNextNode (Genome genes)
+  = head $ dropWhile (`elem` nodes) [0..]
+    where
+      nodes
+        = concatMap (\(Gene (inNode, outNode) _ _ _) -> [inNode, outNode]) genes
+
+getGeneID :: GenePool -> Link -> (GeneID, GenePool)
+getGeneID pool link
+  = case lookup link pool of
+      Just geneID -> (geneID, pool)
+      Nothing     -> (geneID', pool')
+    where
+      geneID'
+        = length pool
+      pool'
+        = (link, geneID') : pool
+
 -- pick a gene
 -- disable it
 -- create two new genes in and out of a new node
 -- add it to genome and genepool
 mutateNode :: RandomGen g => g -> Genome -> GenePool -> ((Genome, GenePool), g)
-mutateNode gen genome genePool
-  = undefined
+mutateNode gen genome@(Genome genes) pool
+  = ((Genome $ before ++ (gene : geneIn : geneOut : after), pool''), gen')
+    where
+      -- -2 from length so pattern always matches
+      index :: Int
+      (index, gen') = randomR (0, length genes - 2) gen
+      (before, ((Gene (inNode, outNode) weight state geneID) : after))
+        = splitAt index genes
+      newNode           = getNextNode genome
+      (geneInID, pool') = getGeneID pool (inNode, newNode)
+      geneIn            = Gene (inNode, newNode) weight state geneInID
+      (geneOutID, pool'') = getGeneID pool' (newNode, outNode)
+      geneOut           = Gene (newNode, outNode) 1.0 state geneOutID
+      gene              = Gene (inNode, outNode) weight False geneID
 
 -- pick two unlinked nodes
 -- create new gene between nodes

@@ -18,7 +18,7 @@ gene31 = Gene (1, 3) 2.0 False 3
 
 alignGenesTests :: Test
 alignGenesTests
-  = equalCases (\(genes1, genes2) -> alignGenes (Genome genes1) (Genome genes2))
+  = equalCases (\(genes1, genes2) -> alignGenes (Genome (0,0) genes1) (Genome (0,0) genes2))
     [ ( ( [gene00, gene20]
         , [gene01, gene10]
         )
@@ -78,7 +78,7 @@ countDisjointExcessTests
 
 distanceTests :: Test
 distanceTests
-  = floatingCases (\(g1, g2) -> distance (1, 1, 1) (Genome g1) (Genome g2))
+  = floatingCases (\(g1, g2) -> distance (1, 1, 1) (Genome (0,0) g1) (Genome (0,0) g2))
     [ ( ( [gene00, gene10]
         , [gene00, gene10]
         )
@@ -147,7 +147,7 @@ getNodesTests
 
 getNextNodeTests :: Test
 getNextNodeTests
-  = equalCases (\genes -> getNextNode $ Genome genes)
+  = equalCases (\genes -> getNextNode $ Genome (0,0) genes)
     [ ([gene00], 2)
     , ([gene30], 0)
     , ([gene00, gene10, gene20, gene30], 4)

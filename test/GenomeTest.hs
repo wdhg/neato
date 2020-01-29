@@ -1,5 +1,6 @@
 module GenomeTest (tests) where
 
+import Data.List       (sort)
 import GA.Neato.Genome
 import System.Random
 import Test.HUnit
@@ -136,6 +137,14 @@ mutateWeightTests
     , ((mkStdGen 3, 1.4), 1.412909813122993)
     ]
 
+getNodesTests :: Test
+getNodesTests
+  = equalCases (sort . getNodes)
+    [ ([gene00, gene10, gene20, gene30], [0,1,2,3])
+    , ([gene00, gene30], [0,1,3])
+    , ([gene20], [0,3])
+    ]
+
 tests :: Test
 tests
   = TestList
@@ -146,4 +155,5 @@ tests
     , "perturbWeight" ~: perturbWeightTests
     , "newWeight" ~: newWeightTests
     , "mutateWeight" ~: mutateWeightTests
+    , "getNodes" ~: getNodesTests
     ]

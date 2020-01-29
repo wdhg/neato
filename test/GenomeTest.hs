@@ -145,6 +145,14 @@ getNodesTests
     , ([gene20], [0,3])
     ]
 
+getNextNodeTests :: Test
+getNextNodeTests
+  = equalCases (\genes -> getNextNode $ Genome genes)
+    [ ([gene00], 2)
+    , ([gene30], 0)
+    , ([gene00, gene10, gene20, gene30], 4)
+    ]
+
 tests :: Test
 tests
   = TestList
@@ -156,4 +164,5 @@ tests
     , "newWeight" ~: newWeightTests
     , "mutateWeight" ~: mutateWeightTests
     , "getNodes" ~: getNodesTests
+    , "getNextNode" ~: getNextNodeTests
     ]

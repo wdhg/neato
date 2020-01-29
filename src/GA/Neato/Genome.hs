@@ -163,12 +163,24 @@ mutateGenes gen (Genome (gene : genes))
           where
             (weight', gene'') = mutateWeight gen' weight
 
+getNodes :: [Gene] -> [Node]
+getNodes []
+  = []
+getNodes ((Gene (inNode, outNode) _ _ _) : genes)
+  = push inNode $ push outNode $ getNodes genes
+    where
+      push :: Node -> [Node] -> [Node]
+      push node nodes
+        | node `elem` nodes = nodes
+        | otherwise         = node : nodes
+
+
 getNextNode :: Genome -> Node
 getNextNode (Genome genes)
   = head $ dropWhile (`elem` nodes) [0..]
     where
       nodes
-        = concatMap (\(Gene (inNode, outNode) _ _ _) -> [inNode, outNode]) genes
+        = getNodes genes
 
 getGeneID :: GenePool -> Link -> (GeneID, GenePool)
 getGeneID pool link
@@ -200,6 +212,26 @@ mutateNode gen genome@(Genome genes) pool
       (geneOutID, pool'') = getGeneID pool' (newNode, outNode)
       geneOut             = Gene (newNode, outNode) 1.0 state geneOutID
       gene                = Gene (inNode, outNode) weight False geneID
+
+getUnlinked :: Genome -> [Link]
+getUnlinked genome@(Genome genes)
+  = filter (\link -> notLinked link && notCyclic link) links
+    where
+      nodes        = getNodes genes
+      links        = [(inNode, outNode) | inNode <- nodes, outNode <- nodes]
+      presentLinks = map (\(Gene link _ _ _) -> link) genes
+      getLinked :: Node -> [Node]
+      getLinked node
+        = concatMap getLinked $ map fst $ filter ((== node) . snd) presentLinks
+      notLinked :: Link -> Bool
+      notLinked link@(inNode, outNode)
+        = link `notElem` presentLinks && outNode `notElem` (getLinked inNode)
+      notCyclic :: Link -> Bool
+      notCyclic (inNode, outNode)
+        | inNode == outNode = False
+        | otherwise         = notLinked (outNode, inNode)
+
+
 
 -- pick two unlinked nodes
 -- create new gene between nodes

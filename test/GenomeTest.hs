@@ -1,6 +1,5 @@
 module GenomeTest (tests) where
 
-import Data.List       (sort)
 import GA.Neato.Genome
 import System.Random
 import Test.HUnit
@@ -165,6 +164,14 @@ getGeneIDTests
       where
         pool = [((0, 1), 0), ((0, 2), 1)]
 
+getUnlinkedTests :: Test
+getUnlinkedTests
+  = equalCases getUnlinked
+    [ (Genome (1, 2) [gene01a, gene02a], [])
+    , (Genome (1, 1) [gene01a, gene02a], [(2,1)])
+    , (Genome (2, 1) [gene02a, gene13a], [(0,3), (1,2), (3,2)])
+    ]
+
 tests :: Test
 tests
   = TestList
@@ -178,4 +185,5 @@ tests
     , "getNodes" ~: getNodesTests
     , "getNextNode" ~: getNextNodeTests
     , "getGeneID" ~: getGeneIDTests
+    , "getUnlinked" ~: getUnlinkedTests
     ]

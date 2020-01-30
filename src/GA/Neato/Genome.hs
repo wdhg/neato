@@ -170,7 +170,7 @@ getNodes :: [Gene] -> [Node]
 getNodes []
   = []
 getNodes ((Gene (inNode, outNode) _ _ _) : genes)
-  = push inNode $ push outNode $ getNodes genes
+  = sort $ push inNode $ push outNode $ getNodes genes
     where
       push :: Node -> [Node] -> [Node]
       push node nodes
@@ -217,11 +217,16 @@ mutateNode gen genome@(Genome io genes) pool
       gene                = Gene (inNode, outNode) weight False geneID
 
 getUnlinked :: Genome -> [Link]
-getUnlinked genome@(Genome _ genes)
+getUnlinked genome@(Genome (inputCount, outputCount) genes)
   = filter (\link -> notLinked link && notCyclic link) links
     where
-      nodes        = getNodes genes
-      links        = [(inNode, outNode) | inNode <- nodes, outNode <- nodes]
+      nodes      = getNodes genes
+      (inputs, nonInputs)
+        = splitAt inputCount nodes
+      (outputs, hidden)
+        = splitAt outputCount nonInputs
+      links
+        = [(inNode, outNode) | inNode <- (inputs ++ hidden), outNode <- (outputs ++ hidden)]
       presentLinks = map (\(Gene link _ _ _) -> link) genes
       getLinked :: Node -> [Node]
       getLinked node

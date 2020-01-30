@@ -217,7 +217,7 @@ mutateNode gen genome@(Genome io genes) pool
       gene                = Gene (inNode, outNode) weight False geneID
 
 getUnlinked :: Genome -> [Link]
-getUnlinked genome@(Genome (inputCount, outputCount) genes)
+getUnlinked (Genome (inputCount, outputCount) genes)
   = filter (\link -> notLinked link && notCyclic link) links
     where
       nodes      = getNodes genes

@@ -6,31 +6,31 @@ import System.Random
 import Test.HUnit
 import Utils
 
-gene00, gene01, gene10, gene11, gene20, gene21, gene30, gene31 :: Gene
-gene00 = Gene (0, 1) 0.1 True 0
-gene01 = Gene (0, 1) 0.6 True 0
-gene10 = Gene (0, 2) 0.7 True 1
-gene11 = Gene (0, 2) 0.6 False 1
-gene20 = Gene (0, 3) 0.3 False 2
-gene21 = Gene (0, 3) 0.8 True 2
-gene30 = Gene (1, 3) 0.0 False 3
-gene31 = Gene (1, 3) 2.0 False 3
+gene01a, gene01b, gene02a, gene02b, gene03a, gene03b, gene13a, gene13b :: Gene
+gene01a = Gene (0, 1) 0.1 True 0
+gene01b = Gene (0, 1) 0.6 True 0
+gene02a = Gene (0, 2) 0.7 True 1
+gene02b = Gene (0, 2) 0.6 False 1
+gene03a = Gene (0, 3) 0.3 False 2
+gene03b = Gene (0, 3) 0.8 True 2
+gene13a = Gene (1, 3) 0.0 False 3
+gene13b = Gene (1, 3) 2.0 False 3
 
 alignGenesTests :: Test
 alignGenesTests
   = equalCases (\(genes1, genes2) -> alignGenes (Genome (0,0) genes1) (Genome (0,0) genes2))
-    [ ( ( [gene00, gene20]
-        , [gene01, gene10]
+    [ ( ( [gene01a, gene03a]
+        , [gene01b, gene02a]
         )
-      , [ (Just gene00, Just gene01)
-        , (Nothing, Just gene10)
-        , (Just gene20, Nothing)
+      , [ (Just gene01a, Just gene01b)
+        , (Nothing, Just gene02a)
+        , (Just gene03a, Nothing)
         ])
-    , ( ( [gene00]
-        , [gene20]
+    , ( ( [gene01a]
+        , [gene03a]
         )
-      , [ (Just gene00, Nothing)
-        , (Nothing, Just gene20)
+      , [ (Just gene01a, Nothing)
+        , (Nothing, Just gene03a)
         ]
       )
     ]
@@ -38,21 +38,21 @@ alignGenesTests
 calcMeanWeightDeltaTests :: Test
 calcMeanWeightDeltaTests
   = floatingCases calcMeanWeightDelta
-    [ ( [ (Just gene00, Just gene01)
-        , (Nothing, Just gene10)
-        , (Just gene20, Nothing)
+    [ ( [ (Just gene01a, Just gene01b)
+        , (Nothing, Just gene02a)
+        , (Just gene03a, Nothing)
         ]
       , 0.5
       )
-    , ( [ (Just gene00, Nothing)
-        , (Just gene10, Just gene11)
-        , (Nothing, Just gene21)
-        , (Just gene30, Just gene31)
+    , ( [ (Just gene01a, Nothing)
+        , (Just gene02a, Just gene02b)
+        , (Nothing, Just gene03b)
+        , (Just gene13a, Just gene13b)
         ]
       , 1.05
       )
-    , ( [ (Just gene00, Nothing)
-        , (Nothing, Just gene10)
+    , ( [ (Just gene01a, Nothing)
+        , (Nothing, Just gene02a)
         ]
       , 0.0
       )
@@ -61,16 +61,16 @@ calcMeanWeightDeltaTests
 countDisjointExcessTests :: Test
 countDisjointExcessTests
   = equalCases countDisjointExcess
-    [ ( [ (Just gene00, Just gene01)
-        , (Nothing, Just gene10)
-        , (Just gene20, Nothing)
+    [ ( [ (Just gene01a, Just gene01b)
+        , (Nothing, Just gene02a)
+        , (Just gene03a, Nothing)
         ]
       , (1, 1)
       )
-    , ( [ (Just gene00, Nothing)
-        , (Just gene10, Just gene11)
-        , (Nothing, Just gene21)
-        , (Just gene30, Just gene31)
+    , ( [ (Just gene01a, Nothing)
+        , (Just gene02a, Just gene02b)
+        , (Nothing, Just gene03b)
+        , (Just gene13a, Just gene13b)
         ]
       , (2, 0)
       )
@@ -79,23 +79,23 @@ countDisjointExcessTests
 distanceTests :: Test
 distanceTests
   = floatingCases (\(g1, g2) -> distance (1, 1, 1) (Genome (0,0) g1) (Genome (0,0) g2))
-    [ ( ( [gene00, gene10]
-        , [gene00, gene10]
+    [ ( ( [gene01a, gene02a]
+        , [gene01a, gene02a]
         )
       , 0.0
       )
-    , ( ( [gene00, gene10]
-        , [gene01, gene11]
+    , ( ( [gene01a, gene02a]
+        , [gene01b, gene02b]
         )
       , 0.3
       )
-    , ( ( [gene00, gene20]
-        , [gene01, gene30]
+    , ( ( [gene01a, gene03a]
+        , [gene01b, gene13a]
         )
       , 1.5
       )
-    , ( ( [gene00]
-        , [gene10]
+    , ( ( [gene01a]
+        , [gene02a]
         )
       , 2.0
       )
@@ -139,18 +139,19 @@ mutateWeightTests
 
 getNodesTests :: Test
 getNodesTests
-  = equalCases (sort . getNodes)
-    [ ([gene00, gene10, gene20, gene30], [0,1,2,3])
-    , ([gene00, gene30], [0,1,3])
-    , ([gene20], [0,3])
+  = equalCases getNodes
+    [ ([gene01a, gene02a, gene03a, gene13a], [0,1,2,3])
+    , ([gene01a, gene13a], [0,1,3])
+    , ([gene03a], [0,3])
+    , ([gene02a, gene13a], [0,1,2,3])
     ]
 
 getNextNodeTests :: Test
 getNextNodeTests
   = equalCases (\genes -> getNextNode $ Genome (0,0) genes)
-    [ ([gene00], 2)
-    , ([gene30], 0)
-    , ([gene00, gene10, gene20, gene30], 4)
+    [ ([gene01a], 2)
+    , ([gene13a], 0)
+    , ([gene01a, gene02a, gene03a, gene13a], 4)
     ]
 
 getGeneIDTests :: Test

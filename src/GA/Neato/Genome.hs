@@ -243,8 +243,21 @@ getUnlinked genome@(Genome (inputCount, outputCount) genes)
 -- create new gene between nodes
 -- add to genome and genepool
 mutateLink :: RandomGen g => g -> Genome -> GenePool -> ((Genome, GenePool), g)
-mutateLink gen genome genePool
-  = undefined
+mutateLink gen genome@(Genome io genes) pool
+  = ((Genome io (gene : genes), pool'), gen'')
+    where
+      links
+        = getUnlinked genome
+      (index, gen')
+        = randomR (0, length links - 1) gen
+      link
+        = links !! index
+      (weight, gen'')
+        = (random gen')
+      (geneID, pool')
+        = getGeneID pool link
+      gene
+        = Gene link (weight * 4 - 2) True geneID
 
 mutate :: RandomGen g => g -> Genome -> (Genome, g)
 mutate gen genome

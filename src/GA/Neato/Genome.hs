@@ -200,9 +200,9 @@ getGeneID pool link
 -- disable it
 -- create two new genes in and out of a new node
 -- add it to genome and genepool
-mutateNode :: RandomGen g => g -> Genome -> GenePool -> ((Genome, GenePool), g)
-mutateNode gen genome@(Genome io genes) pool
-  = ((Genome io $ before ++ (gene : geneIn : geneOut : after), pool''), gen')
+mutateNode :: RandomGen g => (g, GenePool) -> Genome -> (Genome, (g, GenePool))
+mutateNode (gen, pool) genome@(Genome io genes)
+  = (Genome io $ before ++ (gene : geneIn : geneOut : after), (gen', pool''))
     where
       -- -2 from length so pattern always matches
       index :: Int
@@ -242,9 +242,9 @@ getUnlinked (Genome (inputCount, outputCount) genes)
 -- pick two unlinked nodes
 -- create new gene between nodes
 -- add to genome and genepool
-mutateLink :: RandomGen g => g -> Genome -> GenePool -> ((Genome, GenePool), g)
-mutateLink gen genome@(Genome io genes) pool
-  = ((Genome io (gene : genes), pool'), gen'')
+mutateLink :: RandomGen g => (g, GenePool) -> Genome -> (Genome, (g, GenePool))
+mutateLink (gen, pool) genome@(Genome io genes)
+  = (Genome io (gene : genes), (gen'', pool'))
     where
       links
         = getUnlinked genome

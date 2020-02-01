@@ -34,6 +34,9 @@ data Genome
   = Genome IOCount [Gene]
     deriving Eq
 
+type Mutation g
+  = (g, GenePool) -> Genome -> (Genome, (g, GenePool))
+
 instance Eq Gene where
   (Gene _ _ _ geneID1) == (Gene _ _ _ geneID2)
     = geneID1 == geneID2
@@ -153,10 +156,10 @@ mutateWeight gen weight
 -- map over each gene
 --   maybe change weight
 --   maybe change state
-mutateGenes :: RandomGen g => g -> Genome -> (Genome, g)
+mutateGenes :: RandomGen g => Mutation g
 -- Pre: non-empty Genome
-mutateGenes gen (Genome io (gene : genes))
-  = (Genome io $ map fst mutations, snd $ last mutations)
+mutateGenes (gen, pool) (Genome io (gene : genes))
+  = (Genome io $ map fst mutations, (snd $ last mutations, pool))
     where
       mutations
         = scanl (\(_, gen') gene' -> mutateGene gen' gene') (gene, gen) genes
@@ -200,7 +203,7 @@ getGeneID pool link
 -- disable it
 -- create two new genes in and out of a new node
 -- add it to genome and genepool
-mutateNode :: RandomGen g => (g, GenePool) -> Genome -> (Genome, (g, GenePool))
+mutateNode :: RandomGen g => Mutation g
 mutateNode (gen, pool) genome@(Genome io genes)
   = (Genome io $ before ++ (gene : geneIn : geneOut : after), (gen', pool''))
     where
@@ -242,7 +245,7 @@ getUnlinked (Genome (inputCount, outputCount) genes)
 -- pick two unlinked nodes
 -- create new gene between nodes
 -- add to genome and genepool
-mutateLink :: RandomGen g => (g, GenePool) -> Genome -> (Genome, (g, GenePool))
+mutateLink :: RandomGen g => Mutation g
 mutateLink (gen, pool) genome@(Genome io genes)
   = (Genome io (gene : genes), (gen'', pool'))
     where

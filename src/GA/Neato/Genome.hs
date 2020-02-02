@@ -262,6 +262,6 @@ mutateLink (gen, pool) genome@(Genome io genes)
       gene
         = Gene link (weight * 4 - 2) True geneID
 
-mutate :: RandomGen g => g -> Genome -> (Genome, g)
-mutate gen genome
+mutate :: RandomGen g => Mutation g
+mutate (gen, pool) genome
   = undefined

@@ -34,6 +34,9 @@ data Genome
   = Genome IOCount [Gene]
     deriving Eq
 
+type Mutation g
+  = (g, GenePool, Genome) -> (g, GenePool, Genome)
+
 instance Eq Gene where
   (Gene _ _ _ geneID1) == (Gene _ _ _ geneID2)
     = geneID1 == geneID2
@@ -153,7 +156,7 @@ mutateWeight gen weight
 -- map over each gene
 --   maybe change weight
 --   maybe change state
-mutateGenes :: RandomGen g => (g, GenePool, Genome) -> (g, GenePool, Genome)
+mutateGenes :: RandomGen g => Mutation g
 -- Pre: non-empty Genome
 mutateGenes (gen, pool, Genome io (gene : genes))
   = (snd $ last mutations, pool, Genome io $ map fst mutations)
@@ -200,7 +203,7 @@ getGeneID pool link
 -- disable it
 -- create two new genes in and out of a new node
 -- add it to genome and genepool
-mutateNode :: RandomGen g => (g, GenePool, Genome) -> (g, GenePool, Genome)
+mutateNode :: RandomGen g => Mutation g
 mutateNode (gen, pool, genome@(Genome io genes))
   = (gen', pool'', Genome io $ before ++ (gene : geneIn : geneOut : after))
     where
@@ -242,7 +245,7 @@ getUnlinked (Genome (inputCount, outputCount) genes)
 -- pick two unlinked nodes
 -- create new gene between nodes
 -- add to genome and genepool
-mutateLink :: RandomGen g => (g, GenePool, Genome) -> (g, GenePool, Genome)
+mutateLink :: RandomGen g => Mutation g
 mutateLink (gen, pool, genome@(Genome io genes))
   = (gen'', pool', Genome io (gene : genes))
     where
@@ -259,6 +262,14 @@ mutateLink (gen, pool, genome@(Genome io genes))
       gene
         = Gene link (weight * 4 - 2) True geneID
 
-mutate :: RandomGen g => (g, GenePool, Genome) -> (g, GenePool, Genome)
-mutate (gen, pool, genome)
-  = undefined
+chanceMutate :: RandomGen g => Double -> Mutation g -> (g, GenePool, Genome) -> (g, GenePool, Genome)
+chanceMutate chance mutation (gen, pool, genome)
+  | value < chance = mutation (gen', pool, genome)
+  | otherwise      = (gen', pool, genome)
+    where
+      (value, gen')
+        = randomR (0, 1) gen
+
+mutate :: RandomGen g => Mutation g
+mutate
+  = chanceMutate 0.03 mutateNode . chanceMutate 0.05 mutateLink . mutateGenes

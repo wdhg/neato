@@ -34,9 +34,6 @@ data Genome
   = Genome IOCount [Gene]
     deriving Eq
 
-type Mutation g
-  = (g, GenePool) -> Genome -> (Genome, (g, GenePool))
-
 instance Eq Gene where
   (Gene _ _ _ geneID1) == (Gene _ _ _ geneID2)
     = geneID1 == geneID2
@@ -156,10 +153,10 @@ mutateWeight gen weight
 -- map over each gene
 --   maybe change weight
 --   maybe change state
-mutateGenes :: RandomGen g => Mutation g
+mutateGenes :: RandomGen g => (g, GenePool, Genome) -> (g, GenePool, Genome)
 -- Pre: non-empty Genome
-mutateGenes (gen, pool) (Genome io (gene : genes))
-  = (Genome io $ map fst mutations, (snd $ last mutations, pool))
+mutateGenes (gen, pool, Genome io (gene : genes))
+  = (snd $ last mutations, pool, Genome io $ map fst mutations)
     where
       mutations
         = scanl (\(_, gen') gene' -> mutateGene gen' gene') (gene, gen) genes
@@ -203,9 +200,9 @@ getGeneID pool link
 -- disable it
 -- create two new genes in and out of a new node
 -- add it to genome and genepool
-mutateNode :: RandomGen g => Mutation g
-mutateNode (gen, pool) genome@(Genome io genes)
-  = (Genome io $ before ++ (gene : geneIn : geneOut : after), (gen', pool''))
+mutateNode :: RandomGen g => (g, GenePool, Genome) -> (g, GenePool, Genome)
+mutateNode (gen, pool, genome@(Genome io genes))
+  = (gen', pool'', Genome io $ before ++ (gene : geneIn : geneOut : after))
     where
       -- -2 from length so pattern always matches
       index :: Int
@@ -245,9 +242,9 @@ getUnlinked (Genome (inputCount, outputCount) genes)
 -- pick two unlinked nodes
 -- create new gene between nodes
 -- add to genome and genepool
-mutateLink :: RandomGen g => Mutation g
-mutateLink (gen, pool) genome@(Genome io genes)
-  = (Genome io (gene : genes), (gen'', pool'))
+mutateLink :: RandomGen g => (g, GenePool, Genome) -> (g, GenePool, Genome)
+mutateLink (gen, pool, genome@(Genome io genes))
+  = (gen'', pool', Genome io (gene : genes))
     where
       links
         = getUnlinked genome
@@ -262,6 +259,6 @@ mutateLink (gen, pool) genome@(Genome io genes)
       gene
         = Gene link (weight * 4 - 2) True geneID
 
-mutate :: RandomGen g => Mutation g
-mutate (gen, pool) genome
+mutate :: RandomGen g => (g, GenePool, Genome) -> (g, GenePool, Genome)
+mutate (gen, pool, genome)
   = undefined

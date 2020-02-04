@@ -1,6 +1,7 @@
 module GA.Neato.Genome where
 
 import Data.List     (sort)
+import Data.Maybe    (maybeToList)
 import System.Random
 
 type Node
@@ -273,3 +274,33 @@ chanceMutate chance mutation (gen, pool, genome)
 mutate :: RandomGen g => Mutation g
 mutate
   = chanceMutate 0.03 mutateNode . chanceMutate 0.05 mutateLink . mutateGenes
+
+-- breed assumes genome1 is more fit than genome2
+breed :: RandomGen g => g -> Genome -> Genome -> (Genome, g)
+breed gen genome1@(Genome io genes1) genome2
+  = (Genome io $ concatMap (maybeToList . fst) inheritance, snd $ last inheritance)
+    where
+      alignment
+        = alignGenes genome1 genome2
+      inheritance
+        = scanl (\(_, gen') aligned -> inherit gen' aligned) (Nothing, gen) alignment
+      inherit :: RandomGen g => g -> Aligned -> (Maybe Gene, g)
+      inherit gen (left, Nothing)
+        = (left, gen)
+      inherit gen (Nothing, _)
+        = (Nothing, gen)
+      inherit gen (Just (Gene link weight1 enabled1 geneID), Just (Gene _ weight2 enabled2 _))
+        = (Just $ Gene link weight' enabled' geneID, gen'')
+          where
+            inheritLeft :: Bool
+            (inheritLeft, gen')
+              = random gen
+            value :: Double
+            (value, gen'')
+              = randomR (0, 1) gen'
+            weight'
+              | inheritLeft = weight1
+              | otherwise   = weight2
+            enabled'
+              | enabled1 && enabled2 = True
+              | otherwise            = value < 0.25

@@ -3,10 +3,10 @@ module GA.Neato.Network where
 import GA.Neato.Genome
 
 type LinkMap
-  = [[Int]]
+  = [[Double]]
 
 type Nodes
   = [Double]
 
 data Network
-  = Network IOCount Nodes LinkMap
+  = Network IOCount LinkMap

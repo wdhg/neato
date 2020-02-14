@@ -3,7 +3,7 @@ module GA.Neato.Network where
 import GA.Neato.Genome
 
 type LinkMap
-  = [[Double]]
+  = [(Int, [(Int, Double)])]
 
 type Nodes
   = [Double]

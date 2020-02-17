@@ -38,7 +38,7 @@ setNode index value nodes
         = splitAt index nodes
 
 computeNode :: Sigmoid -> (Network, Nodes) -> Int -> (Network, Nodes)
-computeNode sigmoid (network@(Network (inNodes, outNodes) links), nodes) node
+computeNode sigmoid (network@(Network _ links), nodes) node
   = case lookup node links of
       Nothing       -> (network, nodes)
       Just incoming -> (network, setNode node value nodes')
@@ -49,7 +49,7 @@ computeNode sigmoid (network@(Network (inNodes, outNodes) links), nodes) node
             = sum $ map (\(n, weight) -> sigmoid $ weight * (nodes' !! n)) incoming
 
 run :: Sigmoid -> Network -> [Double] -> [Double]
-run sigmoid network@(Network (inNodes, outNodes) links) inputs
+run sigmoid network@(Network (inNodes, outNodes) _) inputs
   = take outNodes $ drop inNodes $ snd computedNodes
     where
       computedNodes

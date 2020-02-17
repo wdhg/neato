@@ -2,6 +2,9 @@ module GA.Neato.Network where
 
 import GA.Neato.Genome
 
+type Sigmoid
+  = (Double -> Double)
+
 type LinkMap
   = [(Int, [(Int, Double)])]
 
@@ -27,10 +30,6 @@ data Network
 
   -}
 
-sigma :: Double -> Double
-sigma
-  = undefined
-
 setNode :: Int -> Double -> Nodes -> Nodes
 setNode index value nodes
   = before ++ (value : after)
@@ -38,20 +37,20 @@ setNode index value nodes
       (before, _ : after)
         = splitAt index nodes
 
-computeNode :: (Network, Nodes) -> Int -> (Network, Nodes)
-computeNode (network@(Network (inNodes, outNodes) links), nodes) node
+computeNode :: Sigmoid -> (Network, Nodes) -> Int -> (Network, Nodes)
+computeNode sigmoid (network@(Network (inNodes, outNodes) links), nodes) node
   = case lookup node links of
       Nothing            -> (network, nodes)
       Just incoming -> (network, setNode node value nodes')
         where
           nodes'
-            = snd $ foldl computeNode (network, nodes) $ map fst incoming
+            = snd $ foldl (computeNode sigmoid) (network, nodes) $ map fst incoming
           value
-            = sum $ map (\(n, weight) -> sigma $ weight * (nodes !! n)) incoming
+            = sum $ map (\(n, weight) -> sigmoid $ weight * (nodes !! n)) incoming
 
-run :: Network -> [Double] -> [Double]
-run network@(Network (inNodes, outNodes) links) inputs
+run :: Sigmoid -> Network -> [Double] -> [Double]
+run sigmoid network@(Network (inNodes, outNodes) links) inputs
   = take outNodes $ drop inNodes $ snd computedNodes
     where
       computedNodes
-        = foldl computeNode (network, inputs ++ repeat 0) [inNodes..outNodes - 1]
+        = foldl (computeNode sigmoid) (network, inputs ++ repeat 0) [inNodes..outNodes - 1]

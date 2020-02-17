@@ -4,6 +4,13 @@ import GA.Neato.Network
 import Test.HUnit
 import Utils
 
+testNetwork0 :: Network
+testNetwork0
+  = Network (2, 1)
+    [ (2, [(0,4.0), (3,3.0)])
+    , (3, [(1, 0.6)])
+    ]
+
 setNodeTests :: Test
 setNodeTests
   = equalCases ((flip $ uncurry setNode) nodes)
@@ -18,18 +25,13 @@ setNodeTests
 
 computeNodeTests :: Test
 computeNodeTests
-  = floatingCases (\n -> (!! n) $ snd $ computeNode id (network, nodes) n)
+  = floatingCases (\n -> (!! n) $ snd $ computeNode id (testNetwork0, nodes) n)
     [ (0, 3.2)
     , (1, 5.7)
     , (3, 0.6 * 5.7)
     , (2, (3.0 * 0.6 * 5.7) + (4.0 * 3.2))
     ]
       where
-        network
-          = Network (2, 1)
-            [ (2, [(0,4.0), (3,3.0)])
-            , (3, [(1, 0.6)])
-            ]
         nodes
           = [3.2, 5.7, 0.0, 0.0]
 

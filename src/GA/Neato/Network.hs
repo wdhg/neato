@@ -46,7 +46,7 @@ computeNode sigmoid (network@(Network (inNodes, outNodes) links), nodes) node
           nodes'
             = snd $ foldl (computeNode sigmoid) (network, nodes) $ map fst incoming
           value
-            = sum $ map (\(n, weight) -> sigmoid $ weight * (nodes !! n)) incoming
+            = sum $ map (\(n, weight) -> sigmoid $ weight * (nodes' !! n)) incoming
 
 run :: Sigmoid -> Network -> [Double] -> [Double]
 run sigmoid network@(Network (inNodes, outNodes) links) inputs

@@ -40,7 +40,7 @@ setNode index value nodes
 computeNode :: Sigmoid -> (Network, Nodes) -> Int -> (Network, Nodes)
 computeNode sigmoid (network@(Network (inNodes, outNodes) links), nodes) node
   = case lookup node links of
-      Nothing            -> (network, nodes)
+      Nothing       -> (network, nodes)
       Just incoming -> (network, setNode node value nodes')
         where
           nodes'

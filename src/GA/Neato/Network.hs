@@ -54,3 +54,7 @@ run sigmoid network@(Network (inNodes, outNodes) _) inputs
     where
       computedNodes
         = foldl (computeNode sigmoid) (network, inputs ++ repeat 0) [inNodes..outNodes - 1]
+
+buildNetwork :: Genome -> Network
+buildNetwork (Genome io genes)
+  = undefined

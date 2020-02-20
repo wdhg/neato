@@ -6,7 +6,7 @@ type Sigmoid
   = (Double -> Double)
 
 type LinkMap
-  = [(Int, [(Int, Double)])]
+  = [(Node, [(Node, Double)])]
 
 type Nodes
   = [Double]
@@ -30,14 +30,14 @@ data Network
 
   -}
 
-setNode :: Int -> Double -> Nodes -> Nodes
+setNode :: Node -> Double -> Nodes -> Nodes
 setNode index value nodes
   = before ++ (value : after)
     where
       (before, _ : after)
         = splitAt index nodes
 
-computeNode :: Sigmoid -> (Network, Nodes) -> Int -> (Network, Nodes)
+computeNode :: Sigmoid -> (Network, Nodes) -> Node -> (Network, Nodes)
 computeNode sigmoid (network@(Network _ links), nodes) node
   = case lookup node links of
       Nothing       -> (network, nodes)

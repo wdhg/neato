@@ -1,14 +1,15 @@
 module NetworkTest (tests) where
 
-import GA.Neato.Network
-import Test.HUnit
-import Utils
+import qualified Data.Map         as Map
+import           GA.Neato.Network
+import           Test.HUnit
+import           Utils
 
 testNetwork0 :: Network
 testNetwork0
-  = Network (2, 1)
-    [ (2, [(0,4.0), (3,3.0)])
-    , (3, [(1, 0.6)])
+  = Network (2, 1) $ Map.fromList
+    [ (2, Map.fromList [(0,4.0), (3,3.0)])
+    , (3, Map.fromList [(1, 0.6)])
     ]
 
 setNodeTests :: Test

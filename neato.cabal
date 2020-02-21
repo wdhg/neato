@@ -50,7 +50,8 @@ test-suite test
     base >= 4.7 && < 5,
     neato,
     HUnit,
-    random
+    random,
+    containers
   other-modules:
     GenomeTest,
     NetworkTest,

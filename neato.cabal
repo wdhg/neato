@@ -32,7 +32,8 @@ library
     -Wall
   build-depends:
     base >= 4.7 && < 5,
-    random
+    random,
+    containers
 
 test-suite test
   type:

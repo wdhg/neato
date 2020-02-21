@@ -1,12 +1,14 @@
 module GA.Neato.Network where
 
-import GA.Neato.Genome
+import qualified Data.Map        as Map
+import           GA.Neato.Genome
+import           Prelude
 
 type Sigmoid
   = (Double -> Double)
 
 type LinkMap
-  = [(Node, [(Node, Double)])]
+  = Map.Map Node (Map.Map Node Double)
 
 type Nodes
   = [Double]
@@ -39,14 +41,14 @@ setNode index value nodes
 
 computeNode :: Sigmoid -> (Network, Nodes) -> Node -> (Network, Nodes)
 computeNode sigmoid (network@(Network _ links), nodes) node
-  = case lookup node links of
+  = case Map.lookup node links of
       Nothing       -> (network, nodes)
       Just incoming -> (network, setNode node value nodes')
         where
           nodes'
-            = snd $ foldl (computeNode sigmoid) (network, nodes) $ map fst incoming
+            = snd $ foldl (computeNode sigmoid) (network, nodes) $ Map.keys incoming
           value
-            = sum $ map (\(n, weight) -> sigmoid $ weight * (nodes' !! n)) incoming
+            = Map.foldlWithKey (\total n weight -> total + (sigmoid $ weight * (nodes' !! n))) 0 incoming
 
 run :: Sigmoid -> Network -> [Double] -> [Double]
 run sigmoid network@(Network (inNodes, outNodes) _) inputs

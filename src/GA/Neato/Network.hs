@@ -50,8 +50,8 @@ computeNode sigmoid (network@(Network _ links), nodes) node
           value
             = Map.foldlWithKey sumValues 0 incoming
           sumValues :: Double -> Node -> Double -> Double
-          sumValues total node weight
-            = total + (sigmoid $ weight * (nodes' !! node))
+          sumValues total node' weight
+            = total + (sigmoid $ weight * (nodes' !! node'))
 
 run :: Sigmoid -> Network -> [Double] -> [Double]
 run sigmoid network@(Network (inNodes, outNodes) _) inputs

@@ -48,7 +48,10 @@ computeNode sigmoid (network@(Network _ links), nodes) node
           nodes'
             = snd $ foldl (computeNode sigmoid) (network, nodes) $ Map.keys incoming
           value
-            = Map.foldlWithKey (\total n weight -> total + (sigmoid $ weight * (nodes' !! n))) 0 incoming
+            = Map.foldlWithKey sumValues 0 incoming
+          sumValues :: Double -> Node -> Double -> Double
+          sumValues total node weight
+            = total + (sigmoid $ weight * (nodes' !! node))
 
 run :: Sigmoid -> Network -> [Double] -> [Double]
 run sigmoid network@(Network (inNodes, outNodes) _) inputs
@@ -60,3 +63,17 @@ run sigmoid network@(Network (inNodes, outNodes) _) inputs
 buildNetwork :: Genome -> Network
 buildNetwork (Genome io genes)
   = undefined
+  {-
+  = Network io $ createLinkMap genes
+    where
+      insertAt :: Int -> (Int, Double) ->
+      addGene :: LinkMap -> Gene -> LinkMap
+      addGene linkMap (Gene _ _ False _ _)
+        = linkMap
+      addGene linkMap (Gene (inNode, outNode) weight _ _)
+        = case lookup outNode linkMap of
+            Nothing        -> (outNode, [(inNode, weight)]) : linkMap
+            Just incomming ->
+              where
+
+-}

@@ -22,3 +22,11 @@ floatingCases func
     where
       testFunc (input, expected)
         = floatingCase (func input) expected
+
+floatingListCases :: (Floating a, Show a, Ord a)
+              => (b -> [a]) -> [(b, [a])] -> Test
+floatingListCases func
+  = TestList . map testFunc
+    where
+      testFunc (input, expected)
+        = TestList $ zipWith floatingCase (func input) expected

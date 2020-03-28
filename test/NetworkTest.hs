@@ -36,6 +36,16 @@ computeNodeTests
         nodes
           = [3.2, 5.7, 0.0, 0.0]
 
+runTests :: Test
+runTests
+  = floatingListCases (run id testNetwork0 inputs)
+    [
+
+    ]
+      where
+        inputs
+          = []
+
 tests :: Test
 tests
   = TestList

@@ -15,7 +15,7 @@ type Nodes
 
 data Network
   = Network IOCount LinkMap
-
+    deriving (Show)
 
   {-
 
@@ -62,18 +62,12 @@ run sigmoid network@(Network (inNodes, outNodes) _) inputs
 
 buildNetwork :: Genome -> Network
 buildNetwork (Genome io genes)
-  = undefined
-  {-
-  = Network io $ createLinkMap genes
+  = Network io $ foldr buildNetwork' Map.empty genes
     where
-      insertAt :: Int -> (Int, Double) ->
-      addGene :: LinkMap -> Gene -> LinkMap
-      addGene linkMap (Gene _ _ False _ _)
-        = linkMap
-      addGene linkMap (Gene (inNode, outNode) weight _ _)
-        = case lookup outNode linkMap of
-            Nothing        -> (outNode, [(inNode, weight)]) : linkMap
-            Just incomming ->
-              where
-
--}
+      buildNetwork' :: Gene -> LinkMap -> LinkMap
+      buildNetwork' (Gene (inNode, outNode) weight _ _) linkMap
+        = Map.insert outNode result linkMap
+          where
+            result = case Map.lookup outNode linkMap of
+              Just incoming -> Map.insert inNode weight incoming
+              Nothing       -> Map.insert inNode weight Map.empty

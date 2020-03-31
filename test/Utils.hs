@@ -1,4 +1,4 @@
-module Utils (equalCases, floatingCases) where
+module Utils (equalCases, floatingCases, floatingListCases) where
 
 import Test.HUnit
 

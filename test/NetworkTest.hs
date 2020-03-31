@@ -5,6 +5,13 @@ import           GA.Neato.Network
 import           Test.HUnit
 import           Utils
 
+{-
+  [0]       [1]
+     \       |
+      \     [3]
+       \   /
+        [2]
+-}
 testNetwork0 :: Network
 testNetwork0
   = Network (2, 1) $ Map.fromList
@@ -38,17 +45,15 @@ computeNodeTests
 
 runTests :: Test
 runTests
-  = floatingListCases (run id testNetwork0 inputs)
-    [
-
+  = floatingListCases (run id testNetwork0)
+    [ ([0.0, 0.0], [0.0])
+    , ([0.5, 0.4], [4.0 * 0.5 + 3.0 * (0.6 * 0.4)])
     ]
-      where
-        inputs
-          = []
 
 tests :: Test
 tests
   = TestList
     [ "setNode" ~: setNodeTests
     , "computeNode" ~: computeNodeTests
+    , "run" ~: runTests
     ]

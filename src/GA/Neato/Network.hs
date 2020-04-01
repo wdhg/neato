@@ -11,7 +11,7 @@ type LinkMap
   = Map.Map Node (Map.Map Node Double)
 
 type Nodes
-  = [Double]
+  = Map.Map Node Double
 
 data Network
   = Network IOCount LinkMap
@@ -32,18 +32,11 @@ data Network
 
   -}
 
-setNode :: Node -> Double -> Nodes -> Nodes
-setNode index value nodes
-  = before ++ (value : after)
-    where
-      (before, _ : after)
-        = splitAt index nodes
-
 computeNode :: Sigmoid -> Network -> Nodes -> Node -> Nodes
 computeNode sigmoid network@(Network _ links) nodes node
   = case Map.lookup node links of
       Nothing       -> nodes
-      Just incoming -> setNode node value nodes'
+      Just incoming -> Map.insert node value nodes'
         where
           nodes'
             = foldl (computeNode sigmoid network) nodes $ Map.keys incoming
@@ -51,14 +44,14 @@ computeNode sigmoid network@(Network _ links) nodes node
             = Map.foldlWithKey sumValues 0 incoming
           sumValues :: Double -> Node -> Double -> Double
           sumValues total node' weight
-            = total + (sigmoid $ weight * (nodes' !! node'))
+            = total + (sigmoid $ weight * (Map.findWithDefault 0.0 node' nodes'))
 
 run :: Sigmoid -> Network -> [Double] -> [Double]
 run sigmoid network@(Network (inNodes, outNodes) _) inputs
-  = take outNodes $ drop inNodes $ computedNodes
+  = map (\n -> Map.findWithDefault 0.0 n computedNodes) outputNodesRange
     where
       defaultNodes
-        = inputs ++ repeat 0
+        = Map.fromList $ zip [0..inNodes - 1] $ inputs ++ repeat 0
       outputNodesRange
         = [inNodes..outNodes - 1]
       computedNodes

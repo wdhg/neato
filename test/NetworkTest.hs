@@ -19,21 +19,9 @@ testNetwork0
     , (3, Map.fromList [(1, 0.6)])
     ]
 
-setNodeTests :: Test
-setNodeTests
-  = equalCases ((flip $ uncurry setNode) nodes)
-    [ ((0,1.0), [1.0,1.0,2.0,3.0])
-    , ((1,1.0), [0.0,1.0,2.0,3.0])
-    , ((2,1.0), [0.0,1.0,1.0,3.0])
-    , ((3,1.0), [0.0,1.0,2.0,1.0])
-    ]
-      where
-        nodes
-          = [0.0..3.0]
-
 computeNodeTests :: Test
 computeNodeTests
-  = floatingCases (\n -> computeNode id testNetwork0 nodes n !! n)
+  = floatingCases (\n -> (map snd $ Map.toList $ computeNode id testNetwork0 nodes n) !! n)
     [ (0, 3.2)
     , (1, 5.7)
     , (3, 0.6 * 5.7)
@@ -41,7 +29,7 @@ computeNodeTests
     ]
       where
         nodes
-          = [3.2, 5.7, 0.0, 0.0]
+          = Map.fromList $ zip [0..] [3.2, 5.7, 0.0, 0.0]
 
 runTests :: Test
 runTests
@@ -53,7 +41,6 @@ runTests
 tests :: Test
 tests
   = TestList
-    [ "setNode" ~: setNodeTests
-    , "computeNode" ~: computeNodeTests
+    [ "computeNode" ~: computeNodeTests
     , "run" ~: runTests
     ]

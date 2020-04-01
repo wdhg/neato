@@ -44,21 +44,23 @@ testNetwork1
 
 computeNodeTests :: Test
 computeNodeTests
-  = floatingCases (\n -> (map snd $ Map.toList $ computeNode id testNetwork0 nodes n) !! n)
-    [ (0, 3.2)
-    , (1, 5.7)
-    , (3, 0.6 * 5.7)
-    , (2, (3.0 * 0.6 * 5.7) + (4.0 * 3.2))
+  = floatingCases (\(network, node) -> (getValues $ computeNode id network nodes node) !! node)
+    [ ((testNetwork0, 0), 3.2)
+    , ((testNetwork0, 1), 5.7)
+    , ((testNetwork0, 3), 0.6 * 5.7)
+    , ((testNetwork0, 2), (3.0 * 0.6 * 5.7) + (4.0 * 3.2))
     ]
       where
+        getValues
+          = map snd . Map.toList
         nodes
           = Map.fromList $ zip [0..] [3.2, 5.7, 0.0, 0.0]
 
 runTests :: Test
 runTests
-  = floatingListCases (run id testNetwork0)
-    [ ([0.0, 0.0], [0.0])
-    , ([0.5, 0.4], [4.0 * 0.5 + 3.0 * (0.6 * 0.4)])
+  = floatingListCases (uncurry $ run id)
+    [ ((testNetwork0, [0.0, 0.0]), [0.0])
+    , ((testNetwork0, [0.5, 0.4]), [4.0 * 0.5 + 3.0 * (0.6 * 0.4)])
     ]
 
 buildNetworkTests :: Test

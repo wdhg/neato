@@ -57,8 +57,12 @@ run :: Sigmoid -> Network -> [Double] -> [Double]
 run sigmoid network@(Network (inNodes, outNodes) _) inputs
   = take outNodes $ drop inNodes $ computedNodes
     where
+      defaultNodes
+        = inputs ++ repeat 0
+      outputNodesRange
+        = [inNodes..outNodes - 1]
       computedNodes
-        = foldl (computeNode sigmoid network) (inputs ++ repeat 0) [inNodes..outNodes - 1]
+        = foldl (computeNode sigmoid network) defaultNodes outputNodesRange
 
 buildNetwork :: Genome -> Network
 buildNetwork (Genome io genes)

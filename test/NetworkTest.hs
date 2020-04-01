@@ -33,7 +33,7 @@ setNodeTests
 
 computeNodeTests :: Test
 computeNodeTests
-  = floatingCases (\n -> (!! n) $ snd $ computeNode id (testNetwork0, nodes) n)
+  = floatingCases (\n -> computeNode id testNetwork0 nodes n !! n)
     [ (0, 3.2)
     , (1, 5.7)
     , (3, 0.6 * 5.7)

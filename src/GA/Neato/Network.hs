@@ -39,14 +39,14 @@ setNode index value nodes
       (before, _ : after)
         = splitAt index nodes
 
-computeNode :: Sigmoid -> (Network, Nodes) -> Node -> (Network, Nodes)
-computeNode sigmoid (network@(Network _ links), nodes) node
+computeNode :: Sigmoid -> Network -> Nodes -> Node -> Nodes
+computeNode sigmoid network@(Network _ links) nodes node
   = case Map.lookup node links of
-      Nothing       -> (network, nodes)
-      Just incoming -> (network, setNode node value nodes')
+      Nothing       -> nodes
+      Just incoming -> setNode node value nodes'
         where
           nodes'
-            = snd $ foldl (computeNode sigmoid) (network, nodes) $ Map.keys incoming
+            = foldl (computeNode sigmoid network) nodes $ Map.keys incoming
           value
             = Map.foldlWithKey sumValues 0 incoming
           sumValues :: Double -> Node -> Double -> Double
@@ -55,10 +55,10 @@ computeNode sigmoid (network@(Network _ links), nodes) node
 
 run :: Sigmoid -> Network -> [Double] -> [Double]
 run sigmoid network@(Network (inNodes, outNodes) _) inputs
-  = take outNodes $ drop inNodes $ snd computedNodes
+  = take outNodes $ drop inNodes $ computedNodes
     where
       computedNodes
-        = foldl (computeNode sigmoid) (network, inputs ++ repeat 0) [inNodes..outNodes - 1]
+        = foldl (computeNode sigmoid network) (inputs ++ repeat 0) [inNodes..outNodes - 1]
 
 buildNetwork :: Genome -> Network
 buildNetwork (Genome io genes)

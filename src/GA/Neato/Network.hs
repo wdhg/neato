@@ -15,7 +15,7 @@ type Nodes
 
 data Network
   = Network IOCount LinkMap
-    deriving (Show)
+    deriving (Show, Eq)
 
   {-
 
@@ -62,8 +62,9 @@ buildNetwork (Genome io genes)
   = Network io $ foldr buildNetwork' Map.empty genes
     where
       buildNetwork' :: Gene -> LinkMap -> LinkMap
-      buildNetwork' (Gene (inNode, outNode) weight _ _) linkMap
-        = Map.insert outNode result linkMap
+      buildNetwork' (Gene (inNode, outNode) weight state _) linkMap
+        | state     = Map.insert outNode result linkMap
+        | otherwise = linkMap
           where
             result = case Map.lookup outNode linkMap of
               Just incoming -> Map.insert inNode weight incoming
